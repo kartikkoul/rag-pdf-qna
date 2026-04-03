@@ -4,6 +4,8 @@ from app.services.ingestion.embed import embed_chunks
 from app.services.ingestion.extract_text_from_pdf import extract_text_from_pdf
 from pprint import pprint
 
+from app.services.ingestion.store_embeds import store_embeds
+
 
 def process_pdf(filename: str, pdf_file: bytes):
      #1 Parse Text
@@ -16,6 +18,7 @@ def process_pdf(filename: str, pdf_file: bytes):
      embeddings = embed_chunks(chunks)
 
      #4 Store in VectorDB
+     store_embeds(chunks, embeddings)
 
      return {
          "filename": filename,

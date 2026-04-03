@@ -10,10 +10,13 @@ async def upload_pdf(file: UploadFile):
         filename = file.filename
         file_bytes = await file.read()
         response = process_pdf(filename, file_bytes)
-        return {"message": "Document processed successfully", "data": response}
-    
+        return {"message": "Document processed successfully", "data": response}        
+
     except Exception as e:
+        if isinstance(e, HTTPException):
+            raise e
+        
         raise HTTPException(
-            status_code=500,
-            detail={"message": "Internal server error", "error": str(e)},
-        )
+                status_code=500,
+                detail={"message": "Internal server error", "error": str(e)},
+            )
