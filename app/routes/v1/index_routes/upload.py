@@ -1,15 +1,21 @@
-from fastapi import APIRouter, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
 
+from app.middlewares.auth.get_user_data import get_user_data
 from app.services.ingestion.process_pdf import process_pdf
 
 upload_router = APIRouter()
 
 @upload_router.post("/upload")
-async def upload_pdf(file: UploadFile):
+async def upload_pdf(
+    file: UploadFile = File(...),
+    request: Request = Depends(get_user_data),
+):
     try:
+        index_name = "rag-pdf-qna"
+        user_id = request.state.user_id
         filename = file.filename
         file_bytes = await file.read()
-        response = process_pdf(filename, file_bytes)
+        response = process_pdf(index_name, filename, file_bytes, user_id)
         return {"message": "Document processed successfully", "data": response}        
 
     except Exception as e:

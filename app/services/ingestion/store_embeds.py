@@ -4,8 +4,8 @@ from numpy import ndarray
 from app.db.pc_client import get_pc_index
 
 
-def store_embeds(chunks, embeds: ndarray):
-    index = get_pc_index("rag-pdf-qna")
+def store_embeds(index_name: str, chunks, embeds: ndarray, user_id:str,  batch_size: int = 100):
+    index = get_pc_index(index_name)
     vectors = []
 
 
@@ -26,6 +26,7 @@ def store_embeds(chunks, embeds: ndarray):
 
 
     if all(check_vector_dims):
-        index.upsert(vectors=vectors)
+        for i in range(0, len(vectors), batch_size):
+            index.upsert(vectors=vectors[i: i+batch_size], namespace=user_id)
     else:
         raise HTTPException(422, detail={"message": "Embedding dimensions doesn't match the Index dimensions"})
