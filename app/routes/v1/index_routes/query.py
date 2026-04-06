@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 
 from app.middlewares.auth.get_user_data import get_user_data
 from app.models.schemas import Query
+from app.services.generation.generate_answer import generate_answer
 from app.services.retrieval.augment_query import augment_query
 
 query_router = APIRouter()
@@ -18,17 +19,14 @@ def query(query: Query, req: Request = Depends(get_user_data)):
         query = query.model_dump().get("query")
         user_id = req.state.user_id
         index_name = "rag-pdf-qna"
-        chunks = ""
         answer = ""
 
-        res = augment_query(index_name, query=query, user_id=user_id)
-       
+        
+        augmented_query = augment_query(index_name, query=query, user_id=user_id)
+        answer = generate_answer(augmented_query)
 
         return {
-            "question": query,
-            "answer": answer,
-            "chunks": chunks,
-            "res": res,
+            "answer": answer
         }
     
     except Exception as e:
