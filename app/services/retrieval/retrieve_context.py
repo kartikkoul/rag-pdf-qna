@@ -1,7 +1,7 @@
 from typing import Any
 from numpy import ndarray
 from app.db.pc_client import get_pc_index
-from app.services.ingestion.embed import model
+from app.services.ingestion.embed import embedder
 
 def _serialize_match(match: Any) -> dict:
     if isinstance(match, dict):
@@ -18,7 +18,7 @@ def _serialize_match(match: Any) -> dict:
     }
 
 def similarity_search(index_name: str, query: str, user_id: str, top_k: int = 10):
-    query_embeddings : ndarray = model.encode([query])[0]
+    query_embeddings : ndarray = embedder.dense_embeds_model.encode([query])[0]
 
     index = get_pc_index(index_name=index_name)
 

@@ -13,7 +13,7 @@ def get_pc_index(index_name: str, index_config: IndexConfig = None):
             index_config = IndexConfig(
                 name=index_name,
                 dimension=384,
-                metric=Metric.COSINE
+                metric=Metric.DOTPRODUCT
             )
 
 

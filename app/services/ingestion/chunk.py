@@ -1,5 +1,5 @@
 # Fixed size chunking
-def chunk_text(filename, pages, chunk_size=100, overlap=25):
+def chunk_text(filename, pages, chunk_size=200, overlap=50):
     chunks = []
 
     for page in pages:

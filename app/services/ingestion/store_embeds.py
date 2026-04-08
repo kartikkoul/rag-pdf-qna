@@ -3,16 +3,16 @@ from numpy import ndarray
 
 from app.db.pc_client import get_pc_index
 
-
-def store_embeds(index_name: str, chunks, embeds: ndarray, user_id:str,  batch_size: int = 100):
+def store_embeds(index_name: str, chunks, dense_embeds: ndarray, sparse_embeds: list, user_id:str,  batch_size: int = 100):
     index = get_pc_index(index_name)
     vectors = []
 
 
-    for _ , (chunk, emb) in enumerate(zip(chunks, embeds)):
+    for _ , (chunk, dense_embeds, sparse_embeds) in enumerate(zip(chunks, dense_embeds, sparse_embeds)):
         vectors.append({
                 "id": chunk["id"],
-                "values": emb.tolist(),
+                "values": dense_embeds.tolist(),
+                "sparse_values": sparse_embeds,
                 "metadata": {
                     "text": chunk["text"],
                     "page": chunk["page"],
