@@ -27,7 +27,6 @@ class ChunksEmbedder:
             "values": coo.values().tolist()
         }
 
-        print(pc_compatible_sparse_vectors)
         
         return pc_compatible_sparse_vectors
 

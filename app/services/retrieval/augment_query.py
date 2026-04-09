@@ -1,12 +1,13 @@
 from app.services.retrieval.reranker import rerank_matches
-from app.services.retrieval.retrieve_context import similarity_search
+from app.services.retrieval.retrieve_context import hybrid_search
+from pprint import pprint
 
 
 def augment_query(index_name: str, query: str, user_id: str):
     #Transform Query
 
     #Search vector DB
-    matches = similarity_search(index_name, query, user_id)
+    matches = hybrid_search(index_name, query, user_id)
 
     #Rerank
     reranked_matches = rerank_matches(query, matches)

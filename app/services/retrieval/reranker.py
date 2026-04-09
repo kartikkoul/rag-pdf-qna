@@ -22,6 +22,6 @@ def rerank_matches(query:str, matches, top_k: int = 2):
         scored_chunks,
         key=lambda x:x["reranked_score"],
         reverse=True
-    )
+    ) 
 
     return reranked_matches[:top_k]
