@@ -1,11 +1,20 @@
+from typing import TypedDict
 from fastapi import HTTPException
 from numpy import ndarray
 
 from app.db.pc_client import get_pc_index
+from app.models.schemas import Chunk
 
-def store_embeds(index_name: str, chunks, dense_embeds: ndarray, sparse_embeds: list, user_id:str,  batch_size: int = 100):
+class PineconeVectorPayload(TypedDict):
+    id: str
+    values: list
+    sparse_values: list
+    metadata: Chunk
+    
+
+def store_embeds(index_name: str, chunks: list[Chunk], dense_embeds: ndarray, sparse_embeds: list, user_id:str,  batch_size: int = 100):
     index = get_pc_index(index_name)
-    vectors = []
+    vectors : list[PineconeVectorPayload] = []
 
 
     for _ , (chunk, dense_embeds, sparse_embeds) in enumerate(zip(chunks, dense_embeds, sparse_embeds)):
@@ -16,7 +25,9 @@ def store_embeds(index_name: str, chunks, dense_embeds: ndarray, sparse_embeds: 
                 "metadata": {
                     "text": chunk["text"],
                     "page": chunk["page"],
-                    "source": chunk["source"]
+                    "source": chunk["source"],
+                    "uploaded_by": chunk["uploaded_by"],
+                    "creation_date":chunk["creation_date"]
                 }
             }
         )

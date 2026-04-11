@@ -14,11 +14,11 @@ def query(query: Query, req: Request = Depends(get_user_data)):
     try:
         query = query.model_dump().get("query")
         user_id = req.state.user_id
-        index_name = "rag-pdf-qna"
-        answer = ""
+        username = req.state.username
 
+        index_name = "rag-pdf-qna"
         
-        augmented_query = augment_query(index_name, query=query, user_id=user_id)
+        augmented_query = augment_query(index_name, query=query, user_id=(user_id+username))
         answer = generate_answer(augmented_query, 0.4, 0.4)
 
         return {

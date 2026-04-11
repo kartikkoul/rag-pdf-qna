@@ -1,9 +1,11 @@
 from sentence_transformers import SentenceTransformer, SparseEncoder
 from torch import Tensor
+
+from app.env_vars import HF_TOKEN
 class ChunksEmbedder:
 
     def __init__(self)->None:
-        self.dense_embeds_model = SentenceTransformer("all-MiniLM-L6-v2")
+        self.dense_embeds_model = SentenceTransformer("all-MiniLM-L6-v2", token=HF_TOKEN)
         self.sparse_embeds_encoder = SparseEncoder("naver/splade-cocondenser-ensembledistil")
     
     def embed_chunks(self, chunks):

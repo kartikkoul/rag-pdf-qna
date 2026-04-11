@@ -13,9 +13,10 @@ async def upload_pdf(
     try:
         index_name = "rag-pdf-qna"
         user_id = request.state.user_id
+        username = request.state.username
         filename = file.filename
         file_bytes = await file.read()
-        response = process_pdf(index_name, filename, file_bytes, user_id)
+        response = process_pdf(index_name, filename, file_bytes, user_id, username)
         return {"message": "Document processed successfully", "data": response}        
 
     except Exception as e:
