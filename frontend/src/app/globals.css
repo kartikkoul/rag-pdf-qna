@@ -5,3 +5,18 @@
   padding: 0;
   outline: 0;
 }
+
+:root{
+  --primary: #7C4DFF;
+  --secondary: #00E5FF;
+  --neutral: #181818;
+}
+
+
+@layer base{
+  body{
+    background-color: var(--neutral);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+  }
+}
