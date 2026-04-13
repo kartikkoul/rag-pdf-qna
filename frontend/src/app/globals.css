@@ -1,17 +1,14 @@
 @import "tailwindcss";
 
-*{
-  margin:0;
-  padding: 0;
-  outline: 0;
-}
-
 :root{
-  --primary: #7C4DFF;
-  --secondary: #00E5FF;
   --neutral: #181818;
 }
 
+@theme {
+  --color-brand: #7C4DFF;
+  --color-secondary: #24e2f8;
+  --color-bg-secondary: #29e7fc22;
+}
 
 @layer base{
   body{
