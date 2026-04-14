@@ -26,7 +26,7 @@ const AIChat = () => {
             </div>
             <div className="sectionInfo">
               <h2 className="font-semibold">MY PERSONALISED CHATBOT</h2>
-              <p className="text-sm leading-4">Engage in a conversation with the chatbot about your knowledgebase</p>
+              <p className="text-sm leading-4 text-[#14d3d3b9]">Ask questions based on the knowledgebase</p>
             </div>
         </div>
         
@@ -34,7 +34,7 @@ const AIChat = () => {
             <MessagesList/>
             <div className="chatActions w-full p-2 bg-[#2f2f2f] flex flex-col gap-2 rounded-lg">
               <textarea placeholder="Type your queries here..." rows={3} className=" outline-0 text-white resize-none px-4 pt-4" />
-              <button className="bg-secondary text-black rounded-sm px-6 py-2 flex items-center justify-center gap-1 self-end">
+              <button className="cursor-pointer bg-secondary text-black rounded-sm px-6 py-2 mb-1 mr-2 flex items-center justify-center gap-1 self-end">
                 Send <FaPaperPlane className="size-3"/>
               </button>
             </div>

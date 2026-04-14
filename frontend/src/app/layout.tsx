@@ -17,7 +17,7 @@ export default function RootLayout({
         lang="en"
         className={`h-full antialiased`}
       >
-        <body className="min-h-screen max-h-screen flex flex-col">
+        <body className="min-h-screen max-h-screen">
           {children}
         </body>
       </html>

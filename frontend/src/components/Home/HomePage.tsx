@@ -18,9 +18,11 @@ const HomePage = () => {
     return (
         <>
             <Header />
-            <main className="main flex gap-8 px-4 mt-16 h-screen">
-                <KnowledgeBase />
-                <AIChat />
+            <main className="main flex flex-col max-h-screen">
+                <div className="flex mt-16 gap-8 px-4 h-screen">
+                    <KnowledgeBase />
+                    <AIChat />
+                </div>
             </main>
         </>
     )
