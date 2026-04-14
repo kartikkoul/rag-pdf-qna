@@ -1,9 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import knowledgeSlice from "./slices/knowledgeSlice";
+import authSlice from "./slices/authSlice"
+import conversationSlice from "./slices/conversationSlice";
 
 export const store = configureStore({
     reducer: {
-        knowledge: knowledgeSlice
+        knowledge: knowledgeSlice,
+        auth: authSlice,
+        conversation: conversationSlice
     }
 })
 

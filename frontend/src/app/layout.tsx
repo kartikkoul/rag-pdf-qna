@@ -1,8 +1,5 @@
 import type { Metadata } from "next"
 import "./globals.css"
-import Header from "../components/Header"
-import { Provider } from "react-redux"
-import { store } from "../state/store"
 
 
 export const metadata: Metadata = {
@@ -21,7 +18,6 @@ export default function RootLayout({
         className={`h-full antialiased`}
       >
         <body className="min-h-screen max-h-screen flex flex-col">
-          <Header />
           {children}
         </body>
       </html>

@@ -1,5 +1,3 @@
-from typing import Any
-
 from fastapi import APIRouter, Depends, HTTPException, Request
 
 from app.middlewares.auth.get_user_data import get_user_data

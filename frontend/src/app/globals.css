@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
 :root{
-  --neutral: #181818;
+  --neutral: #0f0f0f;
 }
 
 @theme {
   --color-brand: #7C4DFF;
   --color-secondary: #24e2f8;
   --color-bg-secondary: #29e7fc22;
+  --color-bg-neutral: #1b1b1b;
 }
 
 @layer base{
