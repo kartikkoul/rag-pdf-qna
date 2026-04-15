@@ -2,6 +2,7 @@ import FeatureItem from "@/src/components/AuthPage/FeatureItem";
 import { BiBrain } from "react-icons/bi";
 import { TbFileDescriptionFilled } from "react-icons/tb";
 
+
 export default function RootLayout({
   children,
 }: Readonly<{

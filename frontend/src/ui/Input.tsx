@@ -6,7 +6,7 @@ interface InputProps{
     placeholder?: string;
     id?: string;
     className?: string;
-    type?: "password" | "text";
+    type?: "password" | "text" | "email";
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(({ value, onChange, placeholder, id, className,type }: InputProps, ref) => {
@@ -20,6 +20,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ value, onChange, place
             className={`
                 input bg-neutral-700 text-white rounded-xs px-3 py-2 outline-0 mt-2
                 focus:ring focus:ring-purple-300
+                transition-all duration-200
                 ${className ?? ""}`}
             ref={ref}
         />
