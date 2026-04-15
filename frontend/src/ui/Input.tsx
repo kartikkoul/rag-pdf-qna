@@ -17,7 +17,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ value, onChange, place
             onChange={onChange}
             placeholder={placeholder}
             id={id}
-            className={`input bg-neutral-700 text-white rounded-xs px-3 py-2 outline-0
+            className={`
+                input bg-neutral-700 text-white rounded-xs px-3 py-2 outline-0 mt-2
+                focus:ring focus:ring-purple-300
                 ${className ?? ""}`}
             ref={ref}
         />

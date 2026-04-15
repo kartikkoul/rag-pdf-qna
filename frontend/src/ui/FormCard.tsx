@@ -7,8 +7,8 @@ interface FormCardProps{
 
 const FormCard = ({children, className }: {children:ReactNode} & FormCardProps) => {
   return (
-        <div className={`bg-neutral-900 rounded-md border border-white/10 ${className ?? ""}`}>
-            <div className="content p-4 w-full flex">
+        <div className={`bg-neutral-900 rounded-md border border-white/10 p-10 ${className ?? ""}`}>
+            <div className="content w-full flex flex-col">
                 {children}
             </div>
         </div>
