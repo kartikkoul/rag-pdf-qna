@@ -35,6 +35,9 @@ export async function POST(request: Request) {
         }
     
         // Return token
+        if(request.url.includes("/signup")){
+            return new Response(JSON.stringify(signInResponse), { status: 201 });
+        }
         return new Response(JSON.stringify(signInResponse), { status: 200 });
     }catch(e){
         console.error("Error in sign-up route:", e);

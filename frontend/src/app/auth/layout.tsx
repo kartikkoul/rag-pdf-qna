@@ -1,13 +1,22 @@
 import FeatureItem from "@/src/components/AuthPage/FeatureItem";
+import { AuthData } from "@/src/types/types";
+import { getUser } from "@/src/utils/auth";
+import { redirect } from "next/navigation";
 import { BiBrain } from "react-icons/bi";
 import { TbFileDescriptionFilled } from "react-icons/tb";
 
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const authData : AuthData = await getUser() as AuthData;
+
+  if(authData){
+    redirect("/");
+  }
+
   const features = [
     {
       icon: <TbFileDescriptionFilled className="size-6"/>,

@@ -9,7 +9,7 @@ export const signUpUser = async (userData: {
   try {
     const response = await BASE_API_ROUTER.post("/auth/signup", userData);
     return response.data;
-  } catch (e) {
+  } catch (e: Error | unknown) {
     return {
       type: "error",
       errors: generateErrors(e),
@@ -19,7 +19,7 @@ export const signUpUser = async (userData: {
 
 
 export const signInUser = async (userData: {
-    usernameOrEmail: string;
+    username: string;
     password: string;
   }) => {
     try {
@@ -32,3 +32,15 @@ export const signInUser = async (userData: {
       };
     }
   };
+
+export const signOutUser = async () => {
+  try{
+    const response = await BASE_API_ROUTER.post("/auth/signout");
+    return response.data;
+  }catch(e){
+    return {
+      type: "error",
+      errors: generateErrors(e)
+    }
+  }
+}

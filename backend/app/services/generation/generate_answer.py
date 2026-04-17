@@ -13,17 +13,6 @@ Rules
 4. MAKE SURE SENTENCE or SENTENCES ARE COMPLETE.
 """
 
-GREETINGS_POOL = [
-    "Hey there! 👋 What can I help you with today?",
-    "Welcome! Ready to explore your documents?",
-    "Hi! Ask me anything about your uploaded files.",
-    "Hello! Let’s dive into your documents.",
-    "Good to see you! What would you like to know?",
-]
-
-def get_random_greeting():
-    return random.choice(GREETINGS_POOL)
-
 ai_client = OpenAI(api_key=OPENROUTER_API_KEY, base_url="https://openrouter.ai/api/v1")
 model="openai/gpt-oss-120b"
 
@@ -40,3 +29,22 @@ def generate_answer( query: str, temperature: int = 0.2, top_p: int = 0.2, max_t
         )
 
         return response.choices[0].message.content
+
+
+def generate_answer_stream( query: str, temperature: int = 0.2, top_p: int = 0.2, max_tokens: int = 500):   
+        stream = ai_client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content":query}
+            ],
+            temperature=temperature,
+            top_p=top_p,
+            max_tokens=max_tokens,
+            stream=True
+        )
+
+        for chunk in stream:
+            token = chunk.choices[0].delta.content or ""
+            if token:
+                yield token

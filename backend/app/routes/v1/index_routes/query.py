@@ -1,14 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi.responses import StreamingResponse
 
 from app.middlewares.auth.get_user_data import get_user_data
 from app.models.schemas import Query
-from app.services.generation.generate_answer import generate_answer
+from app.services.generation.generate_answer import generate_answer_stream
 from app.services.retrieval.augment_query import augment_query
 
 query_router = APIRouter()
 
 @query_router.post("/query")
-def query(query: Query, req: Request = Depends(get_user_data)):
+async def query(query: Query, req: Request = Depends(get_user_data)):
     try:
         query = query.model_dump().get("query")
         user_id = req.state.user_id
@@ -17,11 +18,23 @@ def query(query: Query, req: Request = Depends(get_user_data)):
         index_name = "rag-pdf-qna"
         
         augmented_query = augment_query(index_name, query=query, user_id=(user_id+username))
-        answer = generate_answer(augmented_query, 0.4, 0.4)
 
-        return {
-            "answer": answer
-        }
+        async def event_stream():
+            for token in generate_answer_stream(augmented_query, 0.4, 0.4):
+                if await req.is_disconnected():
+                    break
+                yield f"data: {token}\n\n"
+            yield "data: [DONE]\n\n"
+
+        return StreamingResponse(
+            event_stream(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "X-Accel-Buffering": "no",
+            }
+        )
     
     except Exception as e:
         raise HTTPException(500, {"message": "Internal server error", "error": str(e)})

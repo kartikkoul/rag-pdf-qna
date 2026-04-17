@@ -7,6 +7,7 @@ import AnimatedPrimaryButton from "@/src/ui/PrimaryButton";
 import Link from "next/link";
 import { useRef } from "react";
 import { signUpUser } from "@/src/utils/apiFunctions/authAPI"
+import { redirect } from "next/navigation";
 
 export default function SignUp() {
     const inputRefs = useRef<Record<string, HTMLInputElement | null>>({})
@@ -25,7 +26,13 @@ export default function SignUp() {
             password: passwordEl?.value || ""
         });
 
-        console.log("Signup response:", res);
+
+        if(res.access_token){
+            document.cookie = `authToken=${res.access_token}; path=/; max-age=86400; secure; samesite=strict`;
+            redirect("/");
+        }else{
+            alert(res.errors);
+        }
     }
 
     const inputs: Array<{

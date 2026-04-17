@@ -10,7 +10,7 @@ const KnowledgeList = () => {
     <ul className="knowledgeList mt-4 w-full">
         {
           knowledgeList.map((documentName, index) => {
-            return  <KnowledgeItem key={String(index)} document={documentName} />
+            return  <KnowledgeItem key={index.toString()} document={documentName} />
           })
         }
     </ul>

@@ -1,5 +1,6 @@
 import jwt, { SignOptions } from "jsonwebtoken";
 import { ENV_VARS } from "../env_vars";
+import { cookies } from "next/headers";
 
 type UserType = {
     userId: string,
@@ -24,4 +25,25 @@ export function decodeToken(token: string): UserType | undefined {
         console.log("Error:: ", e);
         new Error("Invalid token");
     }
+}
+
+/* Get user */
+export async function getUser(){
+    const token = (await cookies()).get("authToken")?.value;
+
+    if(!token) return null;
+
+    if(token) {
+        const user = decodeToken(token);
+        return {
+            user,
+            token: token
+        };
+    }
+}
+
+
+/* Delete cookie */
+export async function deleteCookie(keyname: string){
+    (await cookies()).delete(keyname);
 }

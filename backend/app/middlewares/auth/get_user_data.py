@@ -6,6 +6,7 @@ from app.env_vars import NEXTJS_SERVER_URL
 
 def get_user_data(req: Request):    
     try:
+        print("Authorization ::", req.headers.get("Authorization"))
         res = api.get(f"{NEXTJS_SERVER_URL}/v1/auth/getuser", headers={"Authorization": req.headers.get("Authorization")})
         data = res.json()
         

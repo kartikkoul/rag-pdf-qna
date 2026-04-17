@@ -1,10 +1,15 @@
-"use client";
-import { Provider } from "react-redux";
+import { redirect } from "next/navigation";
 import HomePage from "../components/Home/HomePage";
-import { store } from "../state/store";
+import { getUser } from "../utils/auth";
+import { AuthData } from "../types/types";
 
-export default function Home() {
-  return (
-    <Provider store={store}><HomePage/></Provider>
-  )
+export default async function Home() {
+  const authData = await getUser() as AuthData;
+
+  if(!authData){
+    redirect("/auth/signin");
+  }
+
+
+  return <HomePage authData={authData}/>
 }

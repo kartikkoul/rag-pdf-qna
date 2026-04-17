@@ -1,9 +1,7 @@
-import React from 'react'
 import { BsCpuFill } from 'react-icons/bs'
 import { RiUserFill } from 'react-icons/ri'
 
-const MessageItem = ({ key, message }: {
-  key: string,
+const MessageItem = ({ message }: {
   message: {
     role: string,
     content: string
@@ -26,7 +24,7 @@ const MessageItem = ({ key, message }: {
   }
 
   return (
-    <li key={key} className={`
+    <li className={`
         message ${message.role === "user" ? "user" : "assistant"}
         flex items-start gap-4
         ${messageStyles[message.role as "user" | "assistant"]}

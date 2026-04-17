@@ -6,7 +6,7 @@ from app.services.ingestion.extract_text_from_pdf import extract_text_from_pdf
 from app.services.ingestion.store_embeds import store_embeds
 
 
-def process_pdf(index_name:str, filename: str, pdf_file: bytes, user_id: str, username:str):
+async def process_pdf(index_name:str, filename: str, pdf_file: bytes, user_id: str, username:str):
      #1 Parse Text
      pdf_pages = extract_text_from_pdf(pdf_file)
 

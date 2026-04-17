@@ -4,18 +4,35 @@ import FormCard from "@/src/ui/FormCard"
 import Input from "@/src/ui/Input"
 import Label from "@/src/ui/Label"
 import AnimatedPrimaryButton from "@/src/ui/PrimaryButton";
+import { signInUser } from "@/src/utils/apiFunctions/authAPI";
 import Link from "next/link";
-import React from "react";
+import { redirect } from "next/navigation";
+import React, { useRef } from "react";
 import { FaArrowRight } from "react-icons/fa6";
 
 export default function SignIn() {
-    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        const username = (document.getElementById("username") as HTMLInputElement).value
-        const password = (document.getElementById("password") as HTMLInputElement).value
+    const inputRefs = useRef<Record<string, HTMLInputElement | null>>({})
 
-        console.log("Username:", username)
-        console.log("Password:", password)
+    const handleSubmit = async(e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const {username: usernameEl, password: passwordEl} = inputRefs.current;
+        if(!usernameEl?.value || !passwordEl?.value){
+            console.error("One or more inputs are missing.");
+            return;
+        }
+        
+        const res = await signInUser({
+            username: usernameEl?.value || "",
+            password: passwordEl?.value || ""
+        });
+
+
+        if(res.access_token){
+            document.cookie = `authToken=${res.access_token}; path=/; max-age=86400; secure; samesite=strict`;
+            redirect("/");
+        }else{
+            alert(res.errors);
+        }
     }
 
     const inputs: Array<{
@@ -45,7 +62,9 @@ export default function SignIn() {
                     {inputs.map((input) => (
                         <div key={input.id} className="flex flex-col gap-1">
                             <Label htmlFor={input.id} text={input.label} />
-                            <Input id={input.id} placeholder={input.placeholder} type={input.type} />
+                            <Input id={input.id} placeholder={input.placeholder} type={input.type} ref={el => {
+                                inputRefs.current[input.id] = el
+                            }} />
                         </div>
                     ))}
                     <AnimatedPrimaryButton type="submit" text="SIGN IN" icon={<FaArrowRight/>}/>

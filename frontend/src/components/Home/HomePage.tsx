@@ -1,19 +1,25 @@
-import { useDispatch } from 'react-redux'
+"use client";
 import KnowledgeBase from './KnowledgeBaseSection/KnowledgeBase'
 import AIChat from './AIChatSection/AIChat'
 import Header from './Header'
-import { useEffect } from 'react'
-import { setAuth } from '@/src/state/slices/authSlice'
+import { AuthData } from '@/src/types/types';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setAuth } from '@/src/state/slices/authSlice';
+import { clearKnowledge, fetchKnowledge } from '@/src/state/slices/knowledgeSlice';
 
-const HomePage = () => {
+const HomePage = ({authData} : {authData: AuthData}) => {
     const dispatch = useDispatch();
-    
+
     useEffect(() => {
-        dispatch(setAuth({
-            authToken: "blahblah",
-            username: "levelsio"
-        }))
-    })
+        const username = authData.user?.username || "";
+        dispatch(setAuth({username}));
+        dispatch(fetchKnowledge());
+
+        return () => {
+            dispatch(clearKnowledge());
+        }
+    }, [dispatch, authData])
 
     return (
         <>
