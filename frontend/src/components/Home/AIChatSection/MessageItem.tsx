@@ -1,5 +1,6 @@
 import { BsCpuFill } from 'react-icons/bs'
 import { RiUserFill } from 'react-icons/ri'
+import ReactMarkdown from "react-markdown";
 
 const MessageItem = ({ message }: {
   message: {
@@ -7,6 +8,7 @@ const MessageItem = ({ message }: {
     content: string
   }
 }) => {
+  console.log(message);
 
   const messageStyles = {
     user: "self-end flex-row-reverse",
@@ -42,7 +44,9 @@ const MessageItem = ({ message }: {
           
         `}>
         {message.role === "assistant" && <div className="bg-purple-300 w-2 h-full top-0 left-0 absolute"></div>}
-        {message.content}
+        <ReactMarkdown>
+            {message.content}
+        </ReactMarkdown>
       </div>
     </li>
   )

@@ -7,10 +7,9 @@ import { FaFileUpload } from "react-icons/fa";
 const UploadFileComponent = () => {
     const uploadAreaRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const filesUploadingErrorTimer = useRef<ReturnType<typeof setTimeout>>(null);
     const [files, setFiles] = useState<File[]>([]);
     const [filesUploading, setFilesUploading] = useState<boolean>(false);
-    const [filesUploadingError, setFilesUploadingError] = useState<string>("");
+    const [filesUploadingError, setFilesUploadingError] = useState<string[]>([]);
 
     const handleFilesSelect = async(e: ChangeEvent<HTMLInputElement>) =>{
         const selectedFiles = e.target.files ? Array.from(e.target.files) : [];
@@ -23,16 +22,16 @@ const UploadFileComponent = () => {
         }
         const data = await uploadFiles(selectedFiles);
 
-        if(data?.errors){
+        if("errors" in data){
             setFilesUploading(false);
-            setFilesUploadingError(data.errors);
-            
-            filesUploadingErrorTimer.current = setTimeout(() => setFilesUploadingError(""), 3000);
+            setFilesUploadingError(data.errors as Array<string>);
+            console.log("erros:: ", data.errors);
             return;
         }
 
         if(data){
             setFilesUploading(false);
+            console.log("data:: ", data);
         }
     }
 
@@ -66,11 +65,10 @@ const UploadFileComponent = () => {
                 setFilesUploading(true);
                 const data = await uploadFiles(droppedFiles);
 
-                if(data?.errors){
+                if("errors" in data){
                     setFilesUploading(false);
-                    setFilesUploadingError(data.errors);
-                    
-                    filesUploadingErrorTimer.current = setTimeout(() => setFilesUploadingError(""));
+                    setFilesUploadingError(data.errors as Array<string>);
+                    console.log("erros:: ", data.errors);
                     return;
                 }
 

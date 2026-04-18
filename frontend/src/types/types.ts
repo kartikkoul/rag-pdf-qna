@@ -5,3 +5,20 @@ export type AuthData = {
     } | undefined;
     token: string | null;
 }
+
+export type StandardError = {
+  type?: string;
+  message: string | Array<object>;
+}
+
+export type StreamingMessage = {
+  message: string | null,
+  streaming: boolean
+  error: string
+}
+
+export type Message = {
+  role: string;
+  content: string;
+  error?: boolean
+}

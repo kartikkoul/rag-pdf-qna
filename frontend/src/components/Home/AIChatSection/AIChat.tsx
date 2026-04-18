@@ -1,10 +1,14 @@
+"use client";
 import { BiBot } from "react-icons/bi";
 import MessagesList from "./MessagesList";
 import AIChatForm from "./AIChatForm";
+import { useState } from "react";
+import { StreamingMessage } from "@/src/types/types";
 
 
 const AIChat = () => {
-
+  const [streamingMessage, setStreamingMessage] =
+    useState<StreamingMessage | null>(null);
 
   return (
     <section className="chat bg-bg-neutral w-full">
@@ -19,8 +23,8 @@ const AIChat = () => {
         </div>
         
         <div className="chatArea flex flex-col justify-between h-9/10 w-full p-4">
-            <MessagesList/>
-            <AIChatForm/>
+            <MessagesList streamingMessage={streamingMessage}/>
+            <AIChatForm setStreamingMessage={setStreamingMessage}/>
         </div>
     </section>
   )

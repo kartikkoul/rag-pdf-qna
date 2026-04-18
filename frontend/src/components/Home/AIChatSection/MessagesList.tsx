@@ -4,11 +4,16 @@ import { useSelector } from 'react-redux';
 import MessageItem from './MessageItem';
 import { getRandomGreeting } from '@/src/utils/chat';
 import { useEffect, useState } from 'react';
+import { StreamingMessage } from '@/src/types/types';
+import StreamingMessageItem from './StreamingMessageItem';
 
-const MessagesList = () => {
+const MessagesList = ({
+  streamingMessage,
+}: {
+  streamingMessage: StreamingMessage | null;
+}) => {
   const messages = useSelector((state: RootState) => state.conversation.messages);
   const [randomGreeting, setRandomGreeting] = useState<string | null>(null)
-
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setRandomGreeting(getRandomGreeting());
@@ -28,8 +33,11 @@ const MessagesList = () => {
                 <MessageItem key={index.toString()} message={message}/>
             ))
         }
+        {
+          streamingMessage && <StreamingMessageItem message={streamingMessage} />
+        }
     </ul>
   )
 }
-1
+
 export default MessagesList
