@@ -1,0 +1,16 @@
+# Secrets
+.env
+
+# Local dev / tooling
+.venv
+.vscode
+__pycache__/
+*.pyc
+
+# Git & metadata
+.git
+.gitignore
+
+# Misc
+README.md
+.python-version
