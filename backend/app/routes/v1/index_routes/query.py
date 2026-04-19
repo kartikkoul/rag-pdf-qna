@@ -20,10 +20,15 @@ async def query(query: Query, req: Request = Depends(get_user_data)):
         augmented_query = augment_query(index_name, query=query, user_id=(user_id+username))
 
         async def event_stream():
-            for token in generate_answer_stream(augmented_query, 0.4, 0.4):
-                if await req.is_disconnected():
-                    break
-                yield f"data: {token}\n\n"
+            if augmented_query:
+                async for token in generate_answer_stream(augmented_query, 0.4, 0.4, 500, req):
+                    if await req.is_disconnected():
+                        break
+                    yield f"data: {token}\n\n"
+            else:
+                for _ in range(1):
+                    yield "data: I’m sorry, but I don’t have any information to answer that query. Please make sure you have added documents to the knowledge base.\n\n"
+
             yield "data: [DONE]\n\n"
 
         return StreamingResponse(

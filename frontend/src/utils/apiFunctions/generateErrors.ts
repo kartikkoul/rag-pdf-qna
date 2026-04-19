@@ -20,7 +20,7 @@ const generateErrors = (e: Error | StandardError) => {
     }
 
     if ((e as Error).name === "AbortError") {
-      return ["Stream aborted by user"];
+      return ["You stopped the streaming manually."];
     }
 
     return ["An unexpected error occurred. Please try again later."];

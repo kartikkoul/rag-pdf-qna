@@ -13,16 +13,20 @@ async def upload_pdf(
     request: Request = Depends(get_user_data),
 ):
     try:
+        if not len(files) > 0:
+            raise HTTPException(400, "No files provided.")
+
         index_name = "rag-pdf-qna"
         user_id = request.state.user_id
         username = request.state.username
 
+        MAX_FILE_SIZE = 5 * 1024 * 1024
+
         tasks = []
         task_files = [] 
 
-        print("REACHED HERE1")
         for file in files:
-            if file.content_type != "application/pdf":
+            if file.content_type != "application/pdf" or file.size > MAX_FILE_SIZE:
                 continue
 
             file_bytes = await file.read()
@@ -31,13 +35,10 @@ async def upload_pdf(
                 process_pdf(index_name, file.filename, file_bytes, user_id, username)
             )
             task_files.append(file)
-
-        print("REACHED HERE2")
         
 
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
-        print("REACHED HERE3")
 
         final_results = []
 
@@ -64,8 +65,12 @@ async def upload_pdf(
                     "status": "failed",
                     "error": "Invalid file type",
                 })
-
-        print("REACHED HERE4")
+            elif file.size > MAX_FILE_SIZE:
+                final_results.append({
+                    "filename": file.filename,
+                    "status": "failed",
+                    "error": "File too large. Files with size more than 5MB not allowed.",
+                })
         
         
         return {

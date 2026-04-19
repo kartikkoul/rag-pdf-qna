@@ -14,11 +14,10 @@ export type StandardError = {
 export type StreamingMessage = {
   message: string | null,
   streaming: boolean
-  error: string
 }
 
 export type Message = {
   role: string;
   content: string;
-  error?: boolean
+  error?: string
 }

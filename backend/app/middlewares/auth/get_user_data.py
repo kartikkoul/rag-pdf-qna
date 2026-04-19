@@ -6,19 +6,18 @@ from app.env_vars import NEXTJS_SERVER_URL
 
 def get_user_data(req: Request):    
     try:
-        print("Authorization ::", req.headers.get("Authorization"))
         res = api.get(f"{NEXTJS_SERVER_URL}/v1/auth/getuser", headers={"Authorization": req.headers.get("Authorization")})
         data = res.json()
         
         if res.status_code != 200:
-            raise HTTPException(res.status_code, {"message": data.get("message") or data.get("error")})
+            raise HTTPException(res.status_code, {"message": data.get("message") or data.get("error"), "type":"auth_error"})
         
 
         user_id = data.get("userId")
         username = data.get("username")
 
         if not user_id and not username:
-            raise HTTPException(401, {"message": "Invalid token"})
+            raise HTTPException(401, {"message": "Invalid token","type":"auth_error"})
 
 
         req.state.user_id = str(user_id) + "__"

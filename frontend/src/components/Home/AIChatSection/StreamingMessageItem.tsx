@@ -1,4 +1,4 @@
-import { StreamingMessage } from '@/src/types/types';
+import { StreamingMessage } from '@/src/types/types'
 import { BsCpuFill } from 'react-icons/bs'
 import ReactMarkdown from "react-markdown"
 
@@ -26,18 +26,12 @@ const StreamingMessageItem = ({ message }: { message: StreamingMessage }) => {
 
         `}>
         <div className="bg-purple-300 w-2 h-full top-0 left-0 absolute"></div>
-        {message.error ? (
-          <span className="text-red-400">{message.error}</span>
-        ) : (
-          <>
-            <ReactMarkdown>
-                {message.message ?? ''}
-            </ReactMarkdown>
-            {message.streaming ? (
-              <span className="inline-block w-0.5 h-4 ml-0.5 bg-purple-300 animate-pulse align-middle" aria-hidden />
-            ) : null}
-          </>
-        )}
+        <ReactMarkdown>
+          {message.message ?? ''}
+        </ReactMarkdown>
+        {message.streaming ? (
+          <span className="inline-block w-0.5 h-4 ml-0.5 bg-purple-300 animate-pulse align-middle" aria-hidden />
+        ) : null}
       </div>
     </li>
   )

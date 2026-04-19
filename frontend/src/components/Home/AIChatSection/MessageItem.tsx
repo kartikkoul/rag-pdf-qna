@@ -1,12 +1,10 @@
+import { Message } from '@/src/types/types';
 import { BsCpuFill } from 'react-icons/bs'
 import { RiUserFill } from 'react-icons/ri'
 import ReactMarkdown from "react-markdown";
 
 const MessageItem = ({ message }: {
-  message: {
-    role: string,
-    content: string
-  }
+  message: Message
 }) => {
   console.log(message);
 
@@ -39,7 +37,7 @@ const MessageItem = ({ message }: {
       </div>
 
       <div className={`messageContent
-          flex items-start gap-2 p-4 rounded-lg overflow-hidden relative w-max max-w-[80%] text-sm
+          flex flex-col items-start gap-2 p-4 rounded-lg overflow-hidden relative w-max max-w-[80%] text-sm
           ${messageContentStyles[message.role as "user" | "assistant"]}
           
         `}>
@@ -47,6 +45,7 @@ const MessageItem = ({ message }: {
         <ReactMarkdown>
             {message.content}
         </ReactMarkdown>
+        {message.error && (<><span className="error text-red-400 border px-2 text-[12px] rounded-sm rounded-tl-none">{message.error as string}</span></>)}
       </div>
     </li>
   )
