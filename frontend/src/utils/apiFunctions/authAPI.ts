@@ -12,7 +12,7 @@ export const signUpUser = async (userData: {
   } catch (e: Error | unknown) {
     return {
       type: "error",
-      errors: generateErrors(e),
+      error: generateErrors(e),
     };
   }
 };
@@ -28,7 +28,7 @@ export const signInUser = async (userData: {
     } catch (e) {
       return {
         type: "error",
-        errors: generateErrors(e),
+        error: generateErrors(e),
       };
     }
   };
@@ -40,7 +40,7 @@ export const signOutUser = async () => {
   }catch(e){
     return {
       type: "error",
-      errors: generateErrors(e)
+      error: generateErrors(e)
     }
   }
 }

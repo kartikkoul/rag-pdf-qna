@@ -66,10 +66,10 @@ const AIChatForm = ({
                 typeof result === 'object' &&
                 'type' in result &&
                 result.type === 'error' &&
-                'errors' in result &&
-                Array.isArray((result as { errors: string[] }).errors)
+                'error' in result &&
+                Array.isArray(result.error.errors)
             ) {
-                const errors = (result as { errors: string[] }).errors
+                const errors = result.error.errors
 
                 setStreamingMessage(null)
                 setStreaming(false)
@@ -114,7 +114,7 @@ const AIChatForm = ({
     }
 
     return (
-        <form className="chatActions w-full p-2 bg-[#2f2f2f] flex flex-col gap-2 rounded-lg" onSubmit={submitFormHandler}>
+        <form className="chatActions w-full p-2 mt-2 bg-[#2f2f2f] flex flex-col gap-2 rounded-lg" onSubmit={submitFormHandler}>
             <textarea placeholder="Type your queries here..." rows={3} className=" outline-0 text-white resize-none px-4 pt-4" ref={textAreaRef} onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault()

@@ -48,11 +48,10 @@ export const streamLLMResponse = async (
         }
       }
     } catch (e: Error | StandardError | unknown) {
-      console.error("Streaming error:", e);
 
       return {
         type: "error",
-        errors: generateErrors(e as Error | StandardError),
+        error: generateErrors(e as Error | StandardError),
       };
     }
   };

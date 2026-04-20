@@ -6,7 +6,6 @@ import ReactMarkdown from "react-markdown";
 const MessageItem = ({ message }: {
   message: Message
 }) => {
-  console.log(message);
 
   const messageStyles = {
     user: "self-end flex-row-reverse",

@@ -18,7 +18,7 @@ export default function RootLayout({
         lang="en"
         className={`h-full antialiased`}
       >
-        <body className="min-h-screen max-h-screen">
+        <body className="min-h-screen max-h-screen overflow-hidden">
           <ReduxProvider>{children}</ReduxProvider>
         </body>
       </html>

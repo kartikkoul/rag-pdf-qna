@@ -22,7 +22,7 @@ export function decodeToken(token: string): UserType | undefined {
         const decoded = jwt.verify(token, ENV_VARS.JWT_SECRET as string) as UserType;
         return decoded;
     } catch (e) {
-        console.log("Error:: ", e);
+        console.error("Error:: ", e);
         new Error("Invalid token");
     }
 }

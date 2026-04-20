@@ -1,41 +1,33 @@
 import { ENV_VARS } from "@/src/env_vars";
 import axios from "axios";
-import { responseCookiesToRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
   try {
     /* Get incoming form data from client */
-    // const formData = await request.formData();
+    const formData = await request.formData();
 
-    // const files = formData.getAll("files") as File[];
+    const files = formData.getAll("files") as File[];
 
-    // if(!files.length){
-    //     return new Response(JSON.stringify({"message": "No files provided"}), {status: 400})
-    // }
+    if(!files.length){
+        return new Response(JSON.stringify({"message": "No files provided"}), {status: 400})
+    }
 
     const authToken = (await cookies()).get("authToken")?.value;
 
     /* Forward request to the backend */
-    // const response = await axios.post(
-    //   `${ENV_VARS["FASTAPI_BASE_URL"]}/upload`,
-    //   request.body,
-    //   {
-    //     headers: {},
-    //   },
-    // );
-
-    const response = await fetch(`${ENV_VARS["FASTAPI_BASE_URL"]}/upload`, {
-      method:"POST",
-      headers: {
-        Authorization: `Bearer ${authToken}`,
+    const response = await axios.post(
+      `${ENV_VARS["FASTAPI_BASE_URL"]}/upload`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`
+        },
       },
-      body: request.body,
-      duplex:"half"
-    } as RequestInit);
+    );
 
-    /* Handle FastAPI response */
-    return new Response(JSON.stringify(await response.json()), { status: response.status });
+    return new Response(JSON.stringify(response.data), {status: response.status});
+    
   } catch (e) {
     console.error("Error at upload nextjs-server:: ", e);
     

@@ -11,7 +11,7 @@ const AIChat = () => {
     useState<StreamingMessage | null>(null);
 
   return (
-    <section className="chat bg-bg-neutral w-full">
+    <section className="chat bg-bg-neutral w-[65%]">
         <div className="sectionTitle bg-[#2f2f2f] h-1/10 w-full px-4 flex items-center gap-4">
             <div className="sectionIcon p-2 rounded-sm bg-linear-120 from-purple-300 from-10% to-secondary to-90%">
               <BiBot className="size-6 text-[#2f2f2f]"/>

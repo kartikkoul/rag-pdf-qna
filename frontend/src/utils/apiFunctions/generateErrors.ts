@@ -8,22 +8,34 @@ const generateErrors = (e: Error | StandardError) => {
       const err = e.response?.data.error || e.response?.data ;
       if (err?.type === "validation_error") {
         const validationErrors = (err.message as Array<object>).map((error) => (error as {message:string}).message);
-        return validationErrors;
+        return {errors: validationErrors, type: err.type};
       }else if (err?.message) {
-        return [err.message];
+        return {errors: [err.message]};
       } else if (err?.detail) {
-        /* OpenAPI format: detail is an array of { msg, loc, ... } */
-        const detail = err.detail as ReadonlyArray<{ msg?: string }>;
-        const errors = Array.from(new Set(detail.map((item) => item?.msg)));
-        return errors;
+        /* OpenAPI format: detail could be array from Pydantic or custom object */
+        const detail = err.detail;
+        const errors = Array.isArray(detail) ? Array.from(new Set(detail.map((item) => item?.msg))) : [detail?.message];
+
+        const errType = err?.detail?.type;
+
+        const returnError : {
+          errors: string[],
+          type?: string
+        } = {
+          errors: errors
+        }
+
+        if(errType) returnError["type"] = errType
+        
+        return returnError;
       }
     }
 
     if ((e as Error).name === "AbortError") {
-      return ["You stopped the streaming manually."];
+      return {errors: ["You stopped the streaming manually."], type: "abort_error"};
     }
 
-    return ["An unexpected error occurred. Please try again later."];
+    return {errors: ["An unexpected error occurred. Please try again later."]};
 }
 
 export default generateErrors

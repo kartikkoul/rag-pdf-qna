@@ -11,17 +11,18 @@ export const uploadFiles = async (files: File[]) => {
       formData.append("files", file);
     });
 
-    const response : FastApiUploadResponse = await BASE_API_ROUTER.post("/upload", formData ,{
+    const response = await BASE_API_ROUTER.post("/upload", formData ,{
         headers:{
             "Content-Type": "multipart/form-data"
         }
     });
 
-    return response.data;
+
+    return response.data as FastApiUploadResponse;
   } catch (e: unknown) {
     return {
       type: "error",
-      errors: generateErrors(e as Error | StandardError),
+      error: generateErrors(e as Error | StandardError),
     };
   }
 };
