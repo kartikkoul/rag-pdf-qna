@@ -1,17 +1,18 @@
 "use client";
 import { RootState } from '@/src/state/store';
 import { signOutUser } from '@/src/utils/apiFunctions/authAPI';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { LuLogOut } from 'react-icons/lu';
 import { useSelector } from 'react-redux';
 
 const Header = () => {
   const username = useSelector((state:RootState) => state.auth.username);
+  const router = useRouter();
 
   const logoutHandler = async() => {
     const res = await signOutUser();
     if(res?.type !== "error"){
-        redirect("/auth/signin");
+        router.replace("/auth/signin");
     }else{
         alert(res?.errors);
     }

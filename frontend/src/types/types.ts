@@ -21,3 +21,8 @@ export type Message = {
   content: string;
   error?: string
 }
+
+export type GlobalError = {
+  message: string;
+  duration: number;
+}

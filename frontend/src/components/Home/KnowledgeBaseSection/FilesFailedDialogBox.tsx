@@ -53,13 +53,13 @@ const FilesFailedDialogBox = ({
                 {failedFiles.map((file, index) => (
                 <div
                     key={index}
-                    className="flex items-start justify-between gap-4 px-4 py-3 text-sm border-b border-white/5 last:border-none"
+                    className="flex items-end justify-between gap-4 px-4 py-3 text-sm border-b border-white/5 last:border-none"
                 >
                     <span className="text-white/80 truncate max-w-[60%]">
                     {file.filename}
                     </span>
 
-                    <span className="text-red-400 text-right text-xs">
+                    <span className="text-red-400 text-xs">
                     {file.error}
                     </span>
                 </div>

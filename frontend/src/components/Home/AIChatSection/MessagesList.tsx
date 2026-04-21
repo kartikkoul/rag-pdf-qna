@@ -31,7 +31,7 @@ const MessagesList = ({
   }, [messages, streamingMessage])
 
   return (
-    <ul className="messages flex flex-col gap-4 h-full overflow-y-auto px-2 scrollbar-custom" ref={listRef}>
+    <ul className="messages flex flex-col gap-4 h-150 overflow-y-auto px-2 scrollbar-custom" ref={listRef}>
         {
           /* Initial greeting by AI - This won't be included in the context for backend*/
           randomGreeting && <MessageItem message={{

@@ -19,6 +19,10 @@
   }
 }
 
+@utility scrollbar-stable{
+  scrollbar-gutter: stable;
+}
+
 
 /* WebKit (Chrome, Edge, Safari) */
 .scrollbar-custom::-webkit-scrollbar {

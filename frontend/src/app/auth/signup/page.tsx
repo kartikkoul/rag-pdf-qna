@@ -7,12 +7,13 @@ import AnimatedPrimaryButton from "@/src/ui/PrimaryButton";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { signUpUser } from "@/src/utils/apiFunctions/authAPI";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 export default function SignUp() {
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,7 +36,7 @@ export default function SignUp() {
 
     if (res.access_token) {
       document.cookie = `authToken=${res.access_token}; path=/; max-age=86400; secure; samesite=strict`;
-      redirect("/");
+      router.replace("/");
     } else {
       setIsLoading(false);
       setErrors(res.error.errors);

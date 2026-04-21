@@ -3,10 +3,12 @@ import { updateKnowledge } from "@/src/state/slices/knowledgeSlice";
 import { FastApiUploadResponse } from "@/src/types/backendResponseTypes";
 import { ProcessingCard } from "@/src/ui/ProcessingCard";
 import { uploadFiles } from "@/src/utils/apiFunctions/uploadsAPI";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { FaFileUpload } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import FilesFailedDialogBox from "./FilesFailedDialogBox";
+import { GlobalError } from "@/src/types/types";
+import { setGlobalError } from "@/src/state/slices/globalErrorsSlice";
 
 const UploadFileComponent = () => {
   const uploadAreaRef = useRef<HTMLDivElement>(null);
@@ -31,7 +33,7 @@ const UploadFileComponent = () => {
 
     if ("error" in data) {
       setFilesUploading(false);
-      console.log("errors:: ", data.error);
+      dispatch(setGlobalError(data.error.errors[0]));
       return;
     }
 
@@ -86,11 +88,11 @@ const UploadFileComponent = () => {
 
         setFilesUploading(true);
         const data  = await uploadFiles(droppedFiles);
-        console.log(data);
+
         if ("error" in data) {
           setFilesUploading(false);
 
-          console.log("errors:: ", data.error);
+          dispatch(setGlobalError(data.error.errors[0]));
           return;
         }
 
@@ -122,12 +124,12 @@ const UploadFileComponent = () => {
       uploadArea?.removeEventListener("dragleave", dragLeaveHandler);
       uploadArea?.removeEventListener("drop", handleDrop);
     };
-  }, [filesUploading]);
+  }, []);
 
   return (
     <div
       ref={uploadAreaRef}
-      className={`uploadArea mt-8 bg-[#101010] w-full h-4/10 shadow-[0px_0px_10px] [&.drag]:shadow-[0px_0px_15px] shadow-[#c082dc5f] flex flex-col items-center justify-center gap-4 border-2 border-dashed border-gray-600 rounded-md p-8`}
+      className={`uploadArea mt-8 bg-[#101010] w-8/10 md:w-full h-4/10 shadow-[0px_0px_10px] [&.drag]:shadow-[0px_0px_15px] shadow-[#c082dc5f] flex flex-col items-center justify-center gap-4 border-2 border-dashed border-gray-600 rounded-md p-8`}
     >
       {filesUploading && <ProcessingCard />}
 
