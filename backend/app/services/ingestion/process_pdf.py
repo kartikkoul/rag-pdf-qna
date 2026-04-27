@@ -11,7 +11,7 @@ async def process_pdf(index_name:str, filename: str, pdf_file: bytes, user_id: s
      pdf_pages = extract_text_from_pdf(pdf_file)
 
      #2 Chunking
-     chunks = chunk_text(filename, user_id=(user_id+username), pages=pdf_pages)
+     chunks = chunk_text(filename, user_id=(user_id+username), pages=pdf_pages, chunk_technique="semantic")
 
      #3 Embedding
      dense_embeddings, sparse_embeddings = embedder.embed_chunks(chunks)
