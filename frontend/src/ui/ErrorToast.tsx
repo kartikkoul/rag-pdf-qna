@@ -1,3 +1,4 @@
+"use client";
 import { setTimeout } from "node:timers";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -14,9 +15,14 @@ const ErrorToast = ({ message = "Something went wrong", duration = 3000 }) => {
     }, duration);
 
     return () => {
-      if(errorTimerRef.current) clearTimeout(errorTimerRef.current);
-    }
-  }, [duration]);
+      setVisible(false);
+      if (errorTimerRef.current) clearTimeout(errorTimerRef.current);
+    };
+  }, []);
+
+  if(typeof document === "undefined") return null;
+
+  console.log("OP");
 
   return createPortal(
     <div className="absolute top-5 right-5 z-9999 ">

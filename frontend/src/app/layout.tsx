@@ -18,7 +18,8 @@ export default function RootLayout({
         lang="en"
         className={`h-full antialiased`}
       >
-        <body className="min-h-screen max-h-screen overflow-hidden">
+        {/* overflow-y-auto scrollbar-custom */}
+        <body className="h-screen">
           <ReduxProvider>{children}</ReduxProvider>
         </body>
       </html>

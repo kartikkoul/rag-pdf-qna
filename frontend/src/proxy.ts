@@ -7,7 +7,7 @@ export function proxy(req: NextRequest) {
   const token = req.cookies.get("authToken")?.value;
 
   const isProtectedPage =
-    req.nextUrl.pathname === `${base_path}/upload` || req.nextUrl.pathname ===  `${base_path}/query`;
+    req.nextUrl.pathname === `${base_path}/upload` || req.nextUrl.pathname ===  `${base_path}/query` || `${base_path}/getdocsnames`;
 
   // 🚫 Not logged in → block protected routes
   if (!token && isProtectedPage) {

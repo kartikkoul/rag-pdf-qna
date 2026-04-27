@@ -129,7 +129,7 @@ const UploadFileComponent = () => {
   return (
     <div
       ref={uploadAreaRef}
-      className={`uploadArea mt-8 bg-[#101010] w-8/10 md:w-full h-4/10 shadow-[0px_0px_10px] [&.drag]:shadow-[0px_0px_15px] shadow-[#c082dc5f] flex flex-col items-center justify-center gap-4 border-2 border-dashed border-gray-600 rounded-md p-8`}
+      className={`uploadArea mt-8  bg-[#101010] w-8/10 shadow-[0px_0px_10px] [&.drag]:shadow-[0px_0px_15px] shadow-[#c082dc5f] flex flex-col items-center justify-center gap-4 border-2 border-dashed border-gray-600 rounded-md p-8`}
     >
       {filesUploading && <ProcessingCard />}
 
@@ -145,11 +145,11 @@ const UploadFileComponent = () => {
           <div className="uploadIcon bg-gray-800 p-4 rounded-md">
             <FaFileUpload className="size-8 text-purple-300" />
           </div>
-          <p>Drop Documents Here</p>
+          <p className="text-sm text-center">Drop Documents Here</p>
           <div className="uploadFileOption">
             <button
               disabled={filesUploading}
-              className="bg-linear-to-r from-purple-300 to-purple-600 font-medium text-black px-6 p-2 rounded-sm cursor-pointer disabled:cursor-not-allowed"
+              className="bg-linear-to-r from-purple-300 to-purple-600 font-medium text-black text-sm px-6 p-2 rounded-sm cursor-pointer disabled:cursor-not-allowed"
               onClick={() => fileInputRef.current?.click()}
             >
               UPLOAD FILE

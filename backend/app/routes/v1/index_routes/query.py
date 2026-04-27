@@ -21,7 +21,7 @@ async def query(query: Query, req: Request = Depends(get_user_data)):
 
         async def event_stream():
             if augmented_query:
-                async for token in generate_answer_stream(augmented_query, 0.4, 0.4, 500, req):
+                async for token in generate_answer_stream(augmented_query, 0.4, 0.4, 1000, req):
                     if await req.is_disconnected():
                         break
                     yield f"data: {token}\n\n"

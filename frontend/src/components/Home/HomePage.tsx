@@ -2,8 +2,8 @@
 import KnowledgeBase from "./KnowledgeBaseSection/KnowledgeBase";
 import AIChat from "./AIChatSection/AIChat";
 import Header from "./Header";
-import { AuthData, GlobalError } from "@/src/types/types";
-import { useEffect, useRef, useState } from "react";
+import { AuthData } from "@/src/types/types";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuth } from "@/src/state/slices/authSlice";
 import {
@@ -18,6 +18,7 @@ import { signOutUser } from "@/src/utils/apiFunctions/authAPI";
 import ErrorToast from "@/src/ui/ErrorToast";
 import { useRouter } from "next/navigation";
 import { clearGlobalError, setGlobalError } from "@/src/state/slices/globalErrorsSlice";
+import SectionToggle from "./SectionToggle";
 
 const HomePage = ({ authData }: { authData: AuthData }) => {
   const dispatch = useDispatch();
@@ -25,9 +26,9 @@ const HomePage = ({ authData }: { authData: AuthData }) => {
     knowledgeBase: s.knowledge.knowledge,
     globalError: s.globalError
   }));
-  const [activeSection, toggleActiveSection] = useState<"knowledgebase"|"ai-chat">("knowledgebase");
+  const [activeSection, toggleActiveSection] = useState<"kb"|"ai">("ai");
 
-  const loading = !knowledgeBase === null;
+  const loading = knowledgeBase === null;
   const router = useRouter();
 
 
@@ -40,15 +41,18 @@ const HomePage = ({ authData }: { authData: AuthData }) => {
       dispatch(clearGlobalError());
       if (data.error) {
         const error = data.error;
-
-        dispatch(setGlobalError(error.errors[0]));
+        if(typeof window !== "undefined"){
+          dispatch(setGlobalError(error.errors[0]));
+        }
 
         if (error.type === "auth_error") {
           const res = await signOutUser();
           if (res?.type !== "error") {
             router.replace(`/auth/signin?error=auth_error&redirect=${encodeURIComponent(currentPath)}`);
           } else {
-            dispatch(setGlobalError(error.errors[0]));
+            if(typeof window !== "undefined"){
+              dispatch(setGlobalError(error.errors[0]));
+            }
           }
         }
       } else {
@@ -75,19 +79,20 @@ const HomePage = ({ authData }: { authData: AuthData }) => {
 
   return (
     <>
-      {globalError && <ErrorToast {...globalError} />}
+      {globalError.message && <ErrorToast {...globalError} />}
       {loading && (
         <GlobalLoader text={"Initializing your personalised bot..."} />
       )}
       <Header />
-      <main className="main flex flex-col max-h-screen">
-        <div className="hidden md:flex mt-16 gap-8 pl-4 h-screen">
+      <main className="main flex flex-col h-full overflow-y-auto scrollbar-custom">
+        <div className="hidden md:flex w-full h-full mt-16 gap-8">
           <KnowledgeBase/>
           <AIChat />
         </div>
 
-        <div className="flex md:hidden mt-16 gap-8  h-screen">
-          {activeSection === "ai-chat" ? <AIChat/> : <KnowledgeBase/>}
+        <div className="flex flex-col md:hidden mt-16 gap-8 h-full">
+          {activeSection === "ai" ? <AIChat/> : <KnowledgeBase/>}
+          <SectionToggle activeSection={activeSection} toggleActiveSection = { toggleActiveSection}/>
         </div>
         
       </main>

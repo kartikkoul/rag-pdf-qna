@@ -28,7 +28,7 @@ const FilesFailedDialogBox = ({
 
   return createPortal((
     <div className="fileDialogOuter absolute w-screen h-screen max-h-screen bg-[#00000094] flex items-center justify-center top-0 scrollbar-custom" onClick={() => setFilesUploadResponse(null)}>
-        <div className="failedFilesDialog text-center relative bg-[#000000] rounded-md px-24 py-16 z-999" onClick={(e) => e.stopPropagation()}>
+        <div className="failedFilesDialog text-center w-[90%] border border-white/30 relative bg-[#000000] rounded-md px-6 py-16 md:px-24 md:py-16 z-999" onClick={(e) => e.stopPropagation()}>
         <p className="text-red-400 mb-4">Some files failed to upload.</p>
         Summary of the files:
         <div className="flex gap-6 mt-2 mb-4 text-sm justify-center">
@@ -42,7 +42,7 @@ const FilesFailedDialogBox = ({
             ))}
         </div>
         {failedFiles.length > 0 && (
-            <div className="w-full max-w-md mx-auto my-15 rounded-md border border-white/10 bg-white/[0.03] overflow-hidden">
+            <div className="w-full max-w-md mx-auto my-15 rounded-md border border-white/10 bg-white/[0.03]">
             {/* header */}
             <div className="px-4 py-2 text-left text-xs text-white/50 border-b border-white/10">
                 Failed Files

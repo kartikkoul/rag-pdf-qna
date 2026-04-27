@@ -44,7 +44,7 @@ export default function SignIn() {
 
         if (res.access_token) {
             setIsLoading(false);
-            document.cookie = `authToken=${res.access_token}; path=/; max-age=86400; secure; samesite=strict`;
+            document.cookie = `authToken=${res.access_token}; path=/; max-age=86400; samesite=lax`;
             if(redirectPath){
                 router.replace(redirectPath);
                 return;
@@ -78,10 +78,10 @@ export default function SignIn() {
         ]
 
     return (
-        <div className="w-2/5 flex items-center justify-center">
+        <div className="w-full md:w-2/5 flex items-center justify-center">
             <FormCard className="w-3/4">
 
-                <form action="" onSubmit={handleSubmit} className="flex flex-col gap-8 w-full" autoComplete="off">
+                <form  onSubmit={handleSubmit} className="flex flex-col gap-8 w-full" autoComplete="off">
                     {inputs.map((input) => (
                         <div key={input.id} className="flex flex-col gap-1">
                             <Label htmlFor={input.id} text={input.label} />

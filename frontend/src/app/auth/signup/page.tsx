@@ -70,7 +70,7 @@ export default function SignUp() {
   ];
 
   return (
-    <div className="w-2/5 flex items-center justify-center">
+    <div className="w-full md:w-2/5 flex items-center justify-center">
       <FormCard className="w-3/4">
         <form
           onSubmit={handleSubmit}
