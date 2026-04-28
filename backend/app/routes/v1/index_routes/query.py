@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import StreamingResponse
 
@@ -17,7 +18,9 @@ async def query(query: Query, req: Request = Depends(get_user_data)):
 
         index_name = "rag-pdf-qna"
         
-        augmented_query = augment_query(index_name, query=query, user_id=(user_id+username))
+        augmented_query = await asyncio.to_thread(
+            augment_query, index_name, query, (user_id + username)
+        )
 
         async def event_stream():
             if augmented_query:

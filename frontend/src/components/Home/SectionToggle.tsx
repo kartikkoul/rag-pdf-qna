@@ -10,8 +10,8 @@ const SectionToggle = ({activeSection, toggleActiveSection} : {
 }) => {
 
   return (
-    <div className="fixed w-full z-100">
-      <div className="sectionNav flex items-center justify-between bg-black h-15 p-1 rounded-b-md w-full mx-auto">
+    <div className="fixed bottom-0 left-0 w-full z-100">
+      <div className="sectionNav flex items-center justify-between bg-black h-16 p-1 rounded-b-md w-full mx-auto">
         {/* KnowledgeBase */}
         <button
           onClick={() => toggleActiveSection("kb")}

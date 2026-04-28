@@ -32,7 +32,9 @@ async def upload_pdf(
             file_bytes = await file.read()
 
             tasks.append(
-                process_pdf(index_name, file.filename, file_bytes, user_id, username)
+                asyncio.to_thread(
+                    process_pdf, index_name, file.filename, file_bytes, user_id, username
+                )
             )
             task_files.append(file)
         

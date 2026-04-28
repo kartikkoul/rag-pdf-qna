@@ -37,6 +37,16 @@ def store_embeds(index_name: str, chunks: list[Chunk], dense_embeds: ndarray, sp
 
 
     if all(check_vector_dims):
+        # Replace existing vectors for the same uploaded document in this namespace.
+        # This prevents stale chunks when the new upload has fewer chunks than before.
+        if len(chunks) > 0:
+            source_filename = chunks[0].get("source")
+            if source_filename:
+                index.delete(
+                    filter={"source": {"$eq": source_filename}},
+                    namespace=user_id
+                )
+
         for i in range(0, len(vectors), batch_size):
             index.upsert(vectors=vectors[i: i+batch_size], namespace=user_id)
     else:

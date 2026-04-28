@@ -1,6 +1,5 @@
 from app.services.retrieval.reranker import rerank_matches
 from app.services.retrieval.retrieve_context import hybrid_search
-from pprint import pprint
 
 
 def augment_query(index_name: str, query: str, user_id: str):
@@ -12,7 +11,6 @@ def augment_query(index_name: str, query: str, user_id: str):
     #Rerank
     reranked_matches = rerank_matches(query, matches)
 
-    print(reranked_matches)
     #Augmented query
     AUGMENTED_PROMPT =  f"""Answer the query based on the context given:
     

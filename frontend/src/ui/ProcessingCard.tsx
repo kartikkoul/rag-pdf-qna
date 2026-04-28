@@ -1,6 +1,6 @@
 export function ProcessingCard() {
     return (
-      <div className="flex flex-col items-center justify-center gap-4">
+      <div className="flex flex-col items-center justify-center gap-4 w-full">
   
         {/* subtle animated glow */}
         <div className="relative">
@@ -11,7 +11,7 @@ export function ProcessingCard() {
         </div>
   
         {/* text */}
-        <p className="text-white/80 text-sm tracking-wide">
+        <p className="text-white/80 text-sm tracking-wide text-center">
           Processing your files...
         </p>
   

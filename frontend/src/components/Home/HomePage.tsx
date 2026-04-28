@@ -84,13 +84,13 @@ const HomePage = ({ authData }: { authData: AuthData }) => {
         <GlobalLoader text={"Initializing your personalised bot..."} />
       )}
       <Header />
-      <main className="main flex flex-col h-full overflow-y-auto scrollbar-custom">
-        <div className="hidden md:flex w-full h-full mt-16 gap-8">
+      <main className="main h-dvh box-border pt-16 flex flex-col md:flex-row overflow-hidden">
+        <div className="hidden md:flex w-full h-full min-h-0 gap-8 overflow-hidden">
           <KnowledgeBase/>
           <AIChat />
         </div>
 
-        <div className="flex flex-col md:hidden mt-16 gap-8 h-full">
+        <div className="flex flex-col md:hidden w-full h-full min-h-0 pb-16">
           {activeSection === "ai" ? <AIChat/> : <KnowledgeBase/>}
           <SectionToggle activeSection={activeSection} toggleActiveSection = { toggleActiveSection}/>
         </div>

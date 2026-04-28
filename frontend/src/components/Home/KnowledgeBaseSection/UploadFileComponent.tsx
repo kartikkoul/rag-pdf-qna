@@ -1,135 +1,99 @@
 "use client";
-import { updateKnowledge } from "@/src/state/slices/knowledgeSlice";
+import { prependKnowledge } from "@/src/state/slices/knowledgeSlice";
 import { FastApiUploadResponse } from "@/src/types/backendResponseTypes";
 import { ProcessingCard } from "@/src/ui/ProcessingCard";
 import { uploadFiles } from "@/src/utils/apiFunctions/uploadsAPI";
-import { ChangeEvent, Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { FaFileUpload } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import FilesFailedDialogBox from "./FilesFailedDialogBox";
-import { GlobalError } from "@/src/types/types";
 import { setGlobalError } from "@/src/state/slices/globalErrorsSlice";
+import { RootState } from "@/src/state/store";
+import { updateFilesUploading } from "@/src/state/slices/generalContext";
 
 const UploadFileComponent = () => {
-  const uploadAreaRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [files, setFiles] = useState<File[]>([]);
+  const [isDragActive, setIsDragActive] = useState(false);
   const dispatch = useDispatch();
-  const [filesUploading, setFilesUploading] = useState<boolean>(false);
+  const filesUploading = useSelector(
+    (s: RootState) => s.generalContext.filesUploading
+  );
   const [filesUploadResponse, setFilesUploadResponse] =
     useState<FastApiUploadResponse | null>(null);
 
-  const handleFilesSelect = async (e: ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = e.target.files ? Array.from(e.target.files) : [];
-
-    setFiles((s) => [...s, ...selectedFiles]);
-
-    setFilesUploading(true);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-    const data = await uploadFiles(selectedFiles);
-
-
-    if ("error" in data) {
-      setFilesUploading(false);
-      dispatch(setGlobalError(data.error.errors[0]));
+  const processUpload = async (incomingFiles: File[]) => {
+    if (filesUploading || incomingFiles.length === 0) {
       return;
     }
+    dispatch(updateFilesUploading(true));
 
-    if (data) {
-      setFilesUploading(false);
-      const fileUploadData = data;
+    try {
+      const data = await uploadFiles(incomingFiles);
+      if ("error" in data) {
+        dispatch(setGlobalError(data.error.errors[0] ?? "File upload failed."));
+        return;
+      }
 
-      const { summary, results } = fileUploadData.data;
+      const { summary, results } = data.data;
       if (summary.failed > 0) {
-        setFilesUploadResponse(fileUploadData);
+        setFilesUploadResponse(data);
       }
 
       const successfulFileNames = results
         .filter((file) => file.status === "success")
         .map((file) => file.filename);
 
-      if (successfulFileNames) {
-        dispatch(updateKnowledge(successfulFileNames));
+      if (successfulFileNames.length > 0) {
+        dispatch(prependKnowledge(successfulFileNames));
       }
+    } catch {
+      dispatch(setGlobalError("Unexpected upload error. Please try again."));
+    } finally {
+      dispatch(updateFilesUploading(false));
     }
   };
 
-  useEffect(() => {
-    const uploadArea = uploadAreaRef.current;
-
-    if (!uploadArea) return;
-
-    const dragOverHandler = (e: DragEvent) => {
-      e.preventDefault();
-      uploadArea.classList.add(`drag`);
-      if (filesUploading && e.dataTransfer) {
-        e.dataTransfer.dropEffect = "none";
-      }
-    };
-
-    const dragLeaveHandler = (e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      uploadArea.classList.remove(`drag`);
-    };
-
-    const handleDrop = async (e: DragEvent) => {
-      console.log(e);
-      e.preventDefault();
-      if (filesUploading) {
-        return;
-      }
-
-      if (e.dataTransfer?.files) {
-        const droppedFiles = Array.from(e.dataTransfer.files);
-        setFiles((s) => [...s, ...droppedFiles]);
-
-        setFilesUploading(true);
-        const data  = await uploadFiles(droppedFiles);
-
-        if ("error" in data) {
-          setFilesUploading(false);
-
-          dispatch(setGlobalError(data.error.errors[0]));
-          return;
-        }
-
-        if (data) {
-          setFilesUploading(false);
-          const { summary, results } = data.data;
-
-          const successfulFileNames = results
-            .filter((file) => file.status === "success")
-            .map((file) => file.filename);
-
-          if (successfulFileNames) {
-            dispatch(updateKnowledge(successfulFileNames));
-          }
-
-          if (summary.failed > 0) {
-            setFilesUploadResponse(data);
-          }
-        }
-      }
-    };
-
-    uploadArea?.addEventListener("dragover", dragOverHandler);
-    uploadArea?.addEventListener("dragleave", dragLeaveHandler);
-    uploadArea?.addEventListener("drop", handleDrop);
-
-    return () => {
-      uploadArea?.removeEventListener("dragover", dragOverHandler);
-      uploadArea?.removeEventListener("dragleave", dragLeaveHandler);
-      uploadArea?.removeEventListener("drop", handleDrop);
-    };
-  }, []);
+  const handleFilesSelect = async (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = e.target.files ? Array.from(e.target.files) : [];
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    await processUpload(selectedFiles);
+  };
 
   return (
     <div
-      ref={uploadAreaRef}
-      className={`uploadArea mt-8  bg-[#101010] w-8/10 shadow-[0px_0px_10px] [&.drag]:shadow-[0px_0px_15px] shadow-[#c082dc5f] flex flex-col items-center justify-center gap-4 border-2 border-dashed border-gray-600 rounded-md p-8`}
+      role="button"
+      tabIndex={0}
+      aria-label="Upload documents by dropping files or pressing Enter"
+      className={`uploadArea mt-8 shrink-0 bg-[#101010] w-[min(100%,18rem)] sm:w-[min(100%,20rem)] md:w-[80%] min-h-60 shadow-[0px_0px_10px] [&.drag]:shadow-[0px_0px_15px] shadow-[#c082dc5f] flex flex-col items-center justify-center gap-4 border-2 border-dashed border-gray-600 rounded-md px-6 py-8 ${
+        isDragActive ? "drag" : ""
+      }`}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setIsDragActive(true);
+        if (filesUploading && e.dataTransfer) {
+          e.dataTransfer.dropEffect = "none";
+        }
+      }}
+      onDragLeave={(e) => {
+        e.preventDefault();
+        setIsDragActive(false);
+      }}
+      onDrop={async (e) => {
+        e.preventDefault();
+        setIsDragActive(false);
+        const droppedFiles = e.dataTransfer?.files
+          ? Array.from(e.dataTransfer.files)
+          : [];
+        await processUpload(droppedFiles);
+      }}
+      onKeyDown={(e) => {
+        if ((e.key === "Enter" || e.key === " ") && !filesUploading) {
+          e.preventDefault();
+          fileInputRef.current?.click();
+        }
+      }}
     >
       {filesUploading && <ProcessingCard />}
 
@@ -141,13 +105,14 @@ const UploadFileComponent = () => {
       )}
 
       {!filesUploading && (
-        <>
+        <div className="flex flex-col items-center h-full gap-4">
           <div className="uploadIcon bg-gray-800 p-4 rounded-md">
             <FaFileUpload className="size-8 text-purple-300" />
           </div>
           <p className="text-sm text-center">Drop Documents Here</p>
           <div className="uploadFileOption">
             <button
+              type="button"
               disabled={filesUploading}
               className="bg-linear-to-r from-purple-300 to-purple-600 font-medium text-black text-sm px-6 p-2 rounded-sm cursor-pointer disabled:cursor-not-allowed"
               onClick={() => fileInputRef.current?.click()}
@@ -163,7 +128,7 @@ const UploadFileComponent = () => {
             onChange={handleFilesSelect}
             disabled={filesUploading}
           />{" "}
-        </>
+        </div>
       )}
     </div>
   );

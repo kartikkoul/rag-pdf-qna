@@ -3,13 +3,15 @@ import knowledgeSlice from "./slices/knowledgeSlice";
 import authSlice from "./slices/authSlice"
 import conversationSlice from "./slices/conversationSlice";
 import globalErrorSlice from "./slices/globalErrorsSlice"
+import generalContextSlice from "./slices/generalContext";
 
 export const store = configureStore({
     reducer: {
         knowledge: knowledgeSlice,
         auth: authSlice,
         conversation: conversationSlice,
-        globalError: globalErrorSlice
+        globalError: globalErrorSlice,
+        generalContext: generalContextSlice
     }
 })
 

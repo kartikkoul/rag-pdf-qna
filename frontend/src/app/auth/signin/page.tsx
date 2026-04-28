@@ -5,6 +5,7 @@ import Input from "@/src/ui/Input"
 import Label from "@/src/ui/Label"
 import AnimatedPrimaryButton from "@/src/ui/PrimaryButton";
 import { signInUser } from "@/src/utils/apiFunctions/authAPI";
+import { setAuthTokenCookie } from "@/src/utils/authCookie";
 import Link from "next/link";
 import { useRouter, useSearchParams} from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
@@ -20,6 +21,7 @@ export default function SignIn() {
 
     const redirectError = params.get("error");
     const redirectPath = params.get("redirect");
+    const safeRedirectPath = redirectPath?.startsWith("/") ? redirectPath : null;
   
     useEffect(() => {
         if(redirectError === "auth_error"){
@@ -30,23 +32,23 @@ export default function SignIn() {
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
         const { username: usernameEl, password: passwordEl } = inputRefs.current;
-        if (!usernameEl?.value || !passwordEl?.value) {
+        if (!usernameEl?.value.trim() || !passwordEl?.value.trim()) {
             setErrors(["One or more inputs are missing."]);
             return;
         }
 
         setIsLoading(true);
         const res = await signInUser({
-            username: usernameEl?.value || "",
-            password: passwordEl?.value || ""
+            username: usernameEl?.value.trim() || "",
+            password: passwordEl?.value.trim() || ""
         });
 
 
         if (res.access_token) {
             setIsLoading(false);
-            document.cookie = `authToken=${res.access_token}; path=/; max-age=86400; samesite=lax`;
-            if(redirectPath){
-                router.replace(redirectPath);
+            setAuthTokenCookie(res.access_token);
+            if(safeRedirectPath){
+                router.replace(safeRedirectPath);
                 return;
             }
             

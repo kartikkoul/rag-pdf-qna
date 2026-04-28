@@ -24,11 +24,27 @@ const knowledgeSlice = createSlice({
 
             if(action.payload) state?.knowledge?.push(action.payload)
         },
+        prependKnowledge: (state: KnowledgeState, action: PayloadAction<Array<string> | string>) => {
+            if (state.knowledge === null) state.knowledge = []
+
+            const incomingItems = Array.isArray(action.payload)
+                ? action.payload.filter(Boolean)
+                : action.payload
+                ? [action.payload]
+                : []
+
+            if (incomingItems.length === 0) return
+
+            const existingItems = state.knowledge.filter(
+                (item) => !incomingItems.includes(item)
+            )
+            state.knowledge = [...incomingItems, ...existingItems]
+        },
         clearKnowledge: (state: KnowledgeState) => {
             state.knowledge = null
         }
     }
 })
 
-export const { updateKnowledge, clearKnowledge } = knowledgeSlice.actions
+export const { updateKnowledge, prependKnowledge, clearKnowledge } = knowledgeSlice.actions
 export default knowledgeSlice.reducer

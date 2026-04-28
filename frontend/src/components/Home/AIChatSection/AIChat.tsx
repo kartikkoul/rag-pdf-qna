@@ -11,8 +11,8 @@ const AIChat = () => {
     useState<StreamingMessage | null>(null);
 
   return (
-    <section className="chat bg-bg-neutral bg-red md:overflow-x-hidden w-full flex flex-col mt-15 md:mt-0 h-full relative">
-        <div className="fixed z-10 sectionTitle bg-[#2f2f2f] w-full px-4 py-2 flex items-center gap-4 shadow-[0px_0px_40px_10px] shadow-bg-neutral">
+    <section className="chat bg-bg-neutral w-full flex flex-col h-full min-h-0 relative overflow-hidden">
+        <div className="sticky top-0 z-10 sectionTitle bg-[#2f2f2f] w-full px-4 py-2 flex items-center gap-4 shadow-[0px_0px_40px_10px] shadow-bg-neutral">
             <div className="sectionIcon p-2 rounded-sm bg-linear-120 from-purple-300 from-10% to-secondary to-90%">
               <BiBot className="size-6 text-[#2f2f2f]"/>
             </div>
@@ -22,7 +22,7 @@ const AIChat = () => {
             </div>
         </div>
         
-        <div className="chatArea flex flex-col h-full">
+        <div className="chatArea flex flex-col h-full min-h-0">
             <MessagesList streamingMessage={streamingMessage}/>
             <AIChatForm setStreamingMessage={setStreamingMessage}/>
         </div>

@@ -7,7 +7,8 @@ import AnimatedPrimaryButton from "@/src/ui/PrimaryButton";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { signUpUser } from "@/src/utils/apiFunctions/authAPI";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { setAuthTokenCookie } from "@/src/utils/authCookie";
 
 export default function SignUp() {
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
@@ -22,20 +23,20 @@ export default function SignUp() {
       email: emailEl,
       password: passwordEl,
     } = inputRefs.current;
-    if (!usernameEl?.value || !emailEl?.value || !passwordEl?.value) {
+    if (!usernameEl?.value.trim() || !emailEl?.value.trim() || !passwordEl?.value.trim()) {
       setErrors(["One or more inputs are missing."]);
       return;
     }
 
     setIsLoading(true);
     const res = await signUpUser({
-      username: usernameEl?.value || "",
-      email: emailEl?.value || "",
-      password: passwordEl?.value || "",
+      username: usernameEl?.value.trim() || "",
+      email: emailEl?.value.trim() || "",
+      password: passwordEl?.value.trim() || "",
     });
 
     if (res.access_token) {
-      document.cookie = `authToken=${res.access_token}; path=/; max-age=86400; secure; samesite=strict`;
+      setAuthTokenCookie(res.access_token);
       router.replace("/");
     } else {
       setIsLoading(false);
