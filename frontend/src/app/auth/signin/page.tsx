@@ -80,8 +80,12 @@ export default function SignIn() {
         ]
 
     return (
-        <div className="w-full md:w-2/5 flex items-center justify-center">
-            <FormCard className="w-3/4">
+        <div className="w-full md:w-2/5 lg:w-5/12 flex items-center justify-center">
+            <FormCard className="w-full max-w-[460px] p-6 md:p-8 shadow-[0px_0px_60px_-28px_rgba(168,85,247,0.8)]">
+                <div className="mb-6">
+                    <h2 className="text-xl md:text-2xl font-semibold tracking-wide">Sign In</h2>
+                    <p className="text-sm text-neutral-400 mt-1">Access your private document assistant.</p>
+                </div>
 
                 <form  onSubmit={handleSubmit} className="flex flex-col gap-8 w-full" autoComplete="off">
                     {inputs.map((input) => (
@@ -94,8 +98,8 @@ export default function SignIn() {
                     ))}
 
                     {errors?.length > 0 && (
-                        <div className="rounded-sm border border-red-500/30 bg-red-500/10 py-2 px-2 text-red-300 text-sm">
-                            <div className="flex gap-1 justify-center">
+                        <div className="rounded-md border border-red-500/30 bg-red-500/10 py-2 px-3 text-red-300 text-sm">
+                            <div className="flex gap-1 justify-center md:justify-start">
                                     <p>
                                         {errors[0]}
                                     </p>
@@ -103,15 +107,15 @@ export default function SignIn() {
                         </div>
                     )}
 
-                    <AnimatedPrimaryButton type="submit" text="SIGN IN" icon={<FaArrowRight />} loading={isLoading} disabled={isLoading} />
+                    <AnimatedPrimaryButton type="submit" text="SIGN IN" icon={<FaArrowRight />} loading={isLoading} disabled={isLoading} className="rounded-sm" />
                 </form>
-                <div className="extraActions mt-10">
+                <div className="extraActions mt-8">
                     <div className="extrainfo flex justify-center items-center">
                         <hr className="w-full text-[#ffffff27]" />
                         <span className="mx-2 text-xs text-neutral-500 font-semibold tracking-wider text-nowrap">NEW USER?</span>
                         <hr className="w-full text-[#ffffff27]" />
                     </div>
-                    <p className="text-center text-sm tracking-wide mt-8"><Link href={"/auth/signup"} ><span className="underline underline-offset-2">Create an account</span></Link></p>
+                    <p className="text-center text-sm tracking-wide mt-6"><Link href={"/auth/signup"} className="text-neutral-200 hover:text-purple-300 transition-colors"><span className="underline underline-offset-2">Create an account</span></Link></p>
                 </div>
             </FormCard>
         </div>

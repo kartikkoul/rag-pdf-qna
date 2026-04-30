@@ -13,7 +13,7 @@ const StreamingMessageItem = ({ message }: { message: StreamingMessage }) => {
   return (
     <li className={`
         message assistant
-        flex items-start gap-4
+        flex items-start gap-2
       `}>
 
       {message.streaming && !message.message ? (

@@ -28,7 +28,6 @@ const FilesFailedDialogBox = ({
   };
 
   useEffect(() => {
-    closeButtonRef.current?.focus();
     const keyDownHandler = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setFilesUploadResponse(null);

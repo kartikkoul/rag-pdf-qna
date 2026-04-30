@@ -6,13 +6,13 @@ const FeatureItem = ({icon, featureTitle, featureDescription}: {
     featureDescription: string
 }) => {
   return (
-    <li className="flex items-center gap-4 mb-4">
-                      <div className="icon text-secondary">
+    <li className="group flex items-start gap-4 rounded-lg px-2 py-3 transition-colors duration-200 hover:bg-white/5">
+                      <div className="icon text-secondary mt-0.5">
                         {icon}
                       </div>
                       <div className="feature">
-                        <h3 className="">{featureTitle}</h3>
-                        <p className="text-sm">{featureDescription}</p>
+                        <h3 className="text-sm tracking-wide font-semibold text-neutral-100">{featureTitle}</h3>
+                        <p className="text-sm text-neutral-400">{featureDescription}</p>
                       </div>
                     </li>
   )

@@ -25,24 +25,39 @@
 
 
 /* WebKit (Chrome, Edge, Safari) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
 .scrollbar-custom::-webkit-scrollbar {
   width: 6px;
 }
 
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
 .scrollbar-custom::-webkit-scrollbar-track {
   background: transparent;
 }
 
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
 .scrollbar-custom::-webkit-scrollbar-thumb {
   background: linear-gradient(to bottom, #c486ff, #6366f1);
   border-radius: 9999px;
 }
 
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
 .scrollbar-custom::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(to bottom, #c486ff, #818cf8);
 }
 
 /* Firefox */
+.scrollbar-custom,
+html,
+body {
+  scrollbar-width: thin;
+  scrollbar-color: #c486ff transparent;
+}
+
 .scrollbar-custom {
   scrollbar-width: thin;
   scrollbar-color: #c486ff transparent;

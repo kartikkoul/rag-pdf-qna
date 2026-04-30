@@ -12,13 +12,13 @@ const AIChat = () => {
 
   return (
     <section className="chat bg-bg-neutral w-full flex flex-col h-full min-h-0 relative overflow-hidden">
-        <div className="sticky top-0 z-10 sectionTitle bg-[#2f2f2f] w-full px-4 py-2 flex items-center gap-4 shadow-[0px_0px_40px_10px] shadow-bg-neutral">
-            <div className="sectionIcon p-2 rounded-sm bg-linear-120 from-purple-300 from-10% to-secondary to-90%">
-              <BiBot className="size-6 text-[#2f2f2f]"/>
+        <div className="sticky top-0 z-10 sectionTitle border-b border-white/10 bg-neutral-900/85 backdrop-blur-md w-full px-4 py-3 flex items-center gap-3 shadow-[0_12px_40px_-18px_rgba(0,0,0,0.9)]">
+            <div className="sectionIcon p-2 rounded-lg bg-linear-to-br from-purple-300 from-10% to-purple-700 to-90% shadow-md shadow-purple-900/30 ring-1 ring-white/15">
+              <BiBot className="size-6 text-neutral-900" aria-hidden />
             </div>
-            <div className="sectionInfo">
-              <h2 className="text-sm md:text-lg font-semibold">MY PERSONALISED CHATBOT</h2>
-              <p className="text-xs md:text-sm leading-4 text-[#14d3d3b9]">Ask questions based on the knowledgebase</p>
+            <div className="sectionInfo min-w-0">
+              <h2 className="text-sm md:text-base font-semibold tracking-tight text-neutral-100">MY PERSONALISED CHATBOT</h2>
+              <p className="text-xs md:text-sm leading-snug text-neutral-500">Ask questions based on the knowledgebase</p>
             </div>
         </div>
         

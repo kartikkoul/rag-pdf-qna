@@ -21,15 +21,19 @@ const Header = () => {
   }
 
   return (
-    <header className="header h-16 fixed w-full bg-black shadow-[0px_0px_10px] shadow-[#000000] z-1000">
-        <nav className="nav h-full flex w-full justify-between items-center px-4 text-purple-300 font-bold">
-            <div className="brand">
-                <h1 className="logo text-xl md:text-2xl">MY KNOWLEDGEBASE</h1>
+    <header className="header h-16 fixed top-0 w-full z-1000 border-b border-white/10 bg-neutral-950/90 backdrop-blur-md shadow-[0_8px_30px_-12px_rgba(0,0,0,0.85)]">
+        <nav className="nav h-full mx-auto max-w-[1600px] flex w-full justify-between items-center px-4 md:px-6">
+            <div className="brand min-w-0">
+                <h1 className="logo truncate text-lg md:text-xl font-bold tracking-tight bg-linear-to-r from-purple-200 via-purple-300 to-purple-500 bg-clip-text text-transparent">
+                  My KnowledgeBase
+                </h1>
             </div>
 
-            <div className="actions flex items-center justify-center gap-2">
-                <span className="bg-gray-800 rounded-sm flex text-xs items-center justify-center text-gray-400 p-1">{username}</span>
-                <button className="logout cursor-pointer" onClick={logoutHandler}>
+            <div className="actions flex items-center justify-center gap-2 md:gap-3">
+                <span className="max-w-40 truncate rounded-md border border-white/10 bg-neutral-900/80 px-2.5 py-1 text-xs font-medium text-neutral-300">
+                  {username}
+                </span>
+                <button type="button" className="cursor-pointer logout rounded-lg p-2 text-neutral-400 transition hover:bg-white/10 hover:text-neutral-100" title="Sign out" aria-label="Sign out" onClick={logoutHandler}>
                     <LuLogOut size={20}/>
                 </button>
             </div>

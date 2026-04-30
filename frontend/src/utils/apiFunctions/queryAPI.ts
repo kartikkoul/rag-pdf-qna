@@ -12,11 +12,49 @@ export const streamLLMResponse = async (
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Accept": "text/event-stream",
         },
         body: JSON.stringify({ query }),
+        cache: "no-store",
         signal: controller.signal
       });
-  
+
+      if (!res.ok) {
+        const contentType = res.headers.get("content-type") || "";
+        let message = `Request failed with status ${res.status}`;
+
+        if (contentType.includes("application/json")) {
+          const errorBody = (await res.json().catch(() => null)) as unknown;
+          const record = typeof errorBody === "object" && errorBody !== null ? (errorBody as Record<string, unknown>) : null;
+
+          const detail = record && "detail" in record ? (record.detail as unknown) : undefined;
+
+          if (typeof detail === "string") {
+            message = detail;
+          } else if (typeof record?.message === "string") {
+            message = record.message;
+          } else if (typeof detail === "object" && detail !== null) {
+            const detailRecord = detail as Record<string, unknown>;
+            if (typeof detailRecord.message === "string") message = detailRecord.message;
+          }
+        } else {
+          const errorText = await res.text().catch(() => "");
+          if (errorText.trim()) message = errorText.trim();
+        }
+
+        throw new Error(message);
+      }
+
+      const contentType = res.headers.get("content-type") || "";
+      if (!contentType.includes("text/event-stream")) {
+        const bodyText = await res.text().catch(() => "");
+        throw new Error(
+          bodyText?.trim()
+            ? bodyText.trim()
+            : `Expected SSE (text/event-stream) but got: ${contentType || "unknown content-type"}`
+        );
+      }
+
       if (!res.body) throw new Error("No response body");
   
       const reader = res.body.getReader();
@@ -31,18 +69,22 @@ export const streamLLMResponse = async (
   
         buffer += decoder.decode(value, { stream: true });
   
-        const parts = buffer.split("\n\n");
+        const parts = buffer.split(/\r?\n\r?\n/u);
         buffer = parts.pop() || "";
   
         for (const part of parts) {
-          if (!part.startsWith("data:")) continue;
+          const lines = part.split(/\r?\n/u);
+          const dataLines = lines
+            .filter((l) => l.startsWith("data:"))
+            .map((l) => l.slice(5)); // keep rest of line as-is
 
-          // Preserve whitespace inside streamed chunks. SSE allows an optional
-          // single space after "data:"; remove only that prefix space.
-          const rawToken = part.slice(5);
-          const token = rawToken.startsWith(" ") ? rawToken.slice(1) : rawToken;
+          if (dataLines.length === 0) continue;
+
+          const token = dataLines.join("\n").replace(/^ /, "");
 
           if (token === "[DONE]") return;
+          if (token === "[PING]") continue;
+          if (!token || token.trim().length === 0) continue;
 
           onToken(token);
         }

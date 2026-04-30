@@ -2,7 +2,7 @@
 import { addMessage } from "@/src/state/slices/conversationSlice";
 import { Message, StreamingMessage } from "@/src/types/types";
 import { streamLLMResponse } from "@/src/utils/apiFunctions/queryAPI";
-import { Dispatch, SetStateAction, useRef, SubmitEvent, useState } from "react";
+import { Dispatch, SetStateAction, useRef, SubmitEvent, useState, useEffect } from "react";
 import { BiStop } from "react-icons/bi";
 import { FaPaperPlane } from "react-icons/fa";
 import { useDispatch } from "react-redux";
@@ -23,6 +23,7 @@ const AIChatForm = ({
   const [streaming, setStreaming] = useState<boolean>(false);
   const dispatch = useDispatch();
 
+
   const submitFormHandler = async (e: SubmitEvent) => {
     e.preventDefault();
     if (!textAreaRef.current || textAreaRef.current.value.trim().length === 0) {
@@ -37,6 +38,7 @@ const AIChatForm = ({
     dispatch(addMessage(userMessage));
 
     abortController.current = new AbortController();
+    streamedMessageRef.current = "";
     setStreamingMessage({ ...initialStreaming });
 
     try {
@@ -83,12 +85,15 @@ const AIChatForm = ({
         setStreamingMessage(null);
         setStreaming(false);
 
-        dispatch(
-          addMessage({
-            role: "assistant",
-            content: streamedMessageRef.current,
-          } as Message),
-        );
+        const finalMessage = streamedMessageRef.current ?? "";
+        if (finalMessage.length > 0) {
+          dispatch(
+            addMessage({
+              role: "assistant",
+              content: finalMessage,
+            } as Message),
+          );
+        }
 
         streamedMessageRef.current = "";
       }
@@ -121,13 +126,13 @@ const AIChatForm = ({
 
   return (
     <form
-      className="chatActions relative w-[98%] p-2 bg-[#2f2f2f] flex flex-col self-center shrink-0 gap-2 rounded-lg text-xs md:text-sm"
+      className="chatActions relative w-[98%] p-2 mb-2 border border-white/10 bg-neutral-900/80 backdrop-blur-sm flex flex-col self-center shrink-0 gap-2 rounded-xl text-xs md:text-sm shadow-[0_0_40px_-20px_rgba(168,85,247,0.3)]"
       onSubmit={submitFormHandler}
     >
       <textarea
-        placeholder="Type your queries here..."
+        placeholder="Ask a question about your documents…"
         rows={3}
-        className=" outline-0 text-white  resize-none px-4 pt-4"
+        className="outline-0 text-white placeholder:text-neutral-500 resize-none px-4 pt-3 pb-2 bg-transparent rounded-lg scrollbar-custom"
         ref={textAreaRef}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
@@ -138,22 +143,31 @@ const AIChatForm = ({
           }
         }}
       />
-      <div className="actions h-4 relative">
+      <div className="actions relative flex min-h-12 items-center justify-end pr-2 pb-1 pt-1">
         {!streaming && (
           <button
             type="submit"
-            className="absolute bottom-0 right-0 cursor-pointer bg-secondary text-black rounded-sm px-4 py-2 mb-1 mr-2 flex items-center justify-center gap-1 self-end"
+            className="flex h-11 cursor-pointer items-center justify-center gap-1 rounded-md bg-linear-to-r from-purple-300 to-purple-600 px-4 text-black font-semibold shadow-md shadow-purple-900/25 transition hover:brightness-110 active:scale-[0.98]"
           >
-            Send <FaPaperPlane className="size-3" />
+            Send <FaPaperPlane className="size-3" aria-hidden />
           </button>
         )}
 
         {streaming && (
           <button
-            className="absolute bottom-0 right-0 cursor-pointer ring-1 ring-offset-4 ring-offset-[#2f2f2f] ring-bg-secondary bg-secondary text-black rounded-full  mb-1 mr-2 flex items-center justify-center gap-1 self-end shadow-[0px_0px_10px_4px] shadow-secondary"
+            type="button"
+            aria-label="Stop generating"
+            title="Stop generating"
+            className="group relative flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full
+              border border-rose-400/40 bg-linear-to-b from-rose-500/90 to-rose-700/95
+              text-white shadow-[0_0_24px_-4px_rgba(244,63,94,0.55)]
+              ring-2 ring-rose-300/30 ring-offset-2 ring-offset-neutral-900
+              transition hover:brightness-110 hover:ring-rose-200/40 active:scale-95
+              before:absolute before:inset-0 before:rounded-full before:bg-rose-400/20 before:opacity-0 before:animate-pulse group-hover:before:opacity-100"
             onClick={() => abortController.current?.abort()}
           >
-            <BiStop className="size-10 text-white" />
+            <BiStop className="size-6 drop-shadow-sm" aria-hidden />
+            <span className="sr-only">Stop</span>
           </button>
         )}
       </div>

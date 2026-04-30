@@ -66,9 +66,12 @@ const UploadFileComponent = () => {
       role="button"
       tabIndex={0}
       aria-label="Upload documents by dropping files or pressing Enter"
-      className={`uploadArea mt-8 shrink-0 bg-[#101010] w-[min(100%,18rem)] sm:w-[min(100%,20rem)] md:w-[80%] min-h-60 shadow-[0px_0px_10px] [&.drag]:shadow-[0px_0px_15px] shadow-[#c082dc5f] flex flex-col items-center justify-center gap-4 border-2 border-dashed border-gray-600 rounded-md px-6 py-8 ${
-        isDragActive ? "drag" : ""
-      }`}
+      className={`uploadArea mt-6 md:mt-8 shrink-0 w-[min(100%,18rem)] sm:w-[min(100%,20rem)] md:w-[90%] min-h-[14rem] md:min-h-60 flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed px-6 py-8 transition-all duration-200
+        bg-neutral-950/60 backdrop-blur-sm
+        border-neutral-600/80 shadow-[0_0_40px_-12px_rgba(168,85,247,0.35)]
+        hover:border-purple-400/40 hover:shadow-[0_0_48px_-8px_rgba(168,85,247,0.45)]
+        [&.drag]:border-purple-400/70 [&.drag]:bg-purple-950/30 [&.drag]:shadow-[0_0_52px_-6px_rgba(168,85,247,0.55)]
+        ${isDragActive ? "drag" : ""}`}
       onDragOver={(e) => {
         e.preventDefault();
         setIsDragActive(true);
@@ -106,18 +109,21 @@ const UploadFileComponent = () => {
 
       {!filesUploading && (
         <div className="flex flex-col items-center h-full gap-4">
-          <div className="uploadIcon bg-gray-800 p-4 rounded-md">
-            <FaFileUpload className="size-8 text-purple-300" />
+          <div className="uploadIcon rounded-xl bg-neutral-800/90 p-4 ring-1 ring-white/10">
+            <FaFileUpload className="size-8 text-purple-300" aria-hidden />
           </div>
-          <p className="text-sm text-center">Drop Documents Here</p>
+          <div className="text-center space-y-1">
+            <p className="text-sm font-medium text-neutral-200">Drop PDFs here</p>
+            <p className="text-xs text-neutral-500">or browse — max 5 MB per file</p>
+          </div>
           <div className="uploadFileOption">
             <button
               type="button"
               disabled={filesUploading}
-              className="bg-linear-to-r from-purple-300 to-purple-600 font-medium text-black text-sm px-6 p-2 rounded-sm cursor-pointer disabled:cursor-not-allowed"
+              className="rounded-md bg-linear-to-r from-purple-300 to-purple-600 font-semibold text-black text-xs uppercase tracking-wide px-6 py-2.5 shadow-md shadow-purple-900/30 transition hover:brightness-110 active:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
               onClick={() => fileInputRef.current?.click()}
             >
-              UPLOAD FILE
+              Upload file
             </button>
           </div>
           <input

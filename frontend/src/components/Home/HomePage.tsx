@@ -84,13 +84,15 @@ const HomePage = ({ authData }: { authData: AuthData }) => {
         <GlobalLoader text={"Initializing your personalised bot..."} />
       )}
       <Header />
-      <main className="main h-dvh box-border pt-16 flex flex-col md:flex-row overflow-hidden">
-        <div className="hidden md:flex w-full h-full min-h-0 gap-8 overflow-hidden">
+      <main className="main relative h-dvh box-border pt-16 flex flex-col md:flex-row overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 top-16 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(168,85,247,0.12),transparent),radial-gradient(ellipse_60%_40%_at_100%_50%,rgba(168,85,247,0.06),transparent)]" aria-hidden />
+        <div className="relative hidden md:flex w-full h-full min-h-0 gap-0 overflow-hidden md:border-t md:border-white/5">
           <KnowledgeBase/>
+          <div className="hidden md:block w-px shrink-0 bg-gradient-to-b from-transparent via-white/10 to-transparent self-stretch" aria-hidden />
           <AIChat />
         </div>
 
-        <div className="flex flex-col md:hidden w-full h-full min-h-0 pb-16">
+        <div className="relative flex flex-col md:hidden w-full h-full min-h-0 pb-16">
           {activeSection === "ai" ? <AIChat/> : <KnowledgeBase/>}
           <SectionToggle activeSection={activeSection} toggleActiveSection = { toggleActiveSection}/>
         </div>

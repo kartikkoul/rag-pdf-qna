@@ -10,8 +10,8 @@ const SectionToggle = ({activeSection, toggleActiveSection} : {
 }) => {
 
   return (
-    <div className="fixed bottom-0 left-0 w-full z-100">
-      <div className="sectionNav flex items-center justify-between bg-black h-16 p-1 rounded-b-md w-full mx-auto">
+    <div className="fixed bottom-0 left-0 w-full z-100 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+      <div className="sectionNav flex items-center justify-between border-t border-white/10 bg-neutral-950/95 backdrop-blur-md h-16 p-1 w-full mx-auto shadow-[0_-8px_32px_rgba(0,0,0,0.5)]">
         {/* KnowledgeBase */}
         <button
           onClick={() => toggleActiveSection("kb")}
