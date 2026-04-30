@@ -12,7 +12,7 @@ import {
 } from "@/src/state/slices/knowledgeSlice";
 import { clearMessages } from "@/src/state/slices/conversationSlice";
 import GlobalLoader from "@/src/ui/GlobalLoader";
-import { RootState } from "@/src/state/store";
+import { AppDispatch, RootState } from "@/src/state/store";
 import { fetchDocsNames } from "@/src/utils/apiFunctions/docsAPI";
 import { signOutUser } from "@/src/utils/apiFunctions/authAPI";
 import ErrorToast from "@/src/ui/ErrorToast";
@@ -21,7 +21,7 @@ import { clearGlobalError, setGlobalError } from "@/src/state/slices/globalError
 import SectionToggle from "./SectionToggle";
 
 const HomePage = ({ authData }: { authData: AuthData }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { knowledgeBase, globalError}  = useSelector((s: RootState) => ({
     knowledgeBase: s.knowledge.knowledge,
     globalError: s.globalError

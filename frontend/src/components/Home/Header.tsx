@@ -1,13 +1,14 @@
 "use client";
 import { setGlobalError } from '@/src/state/slices/globalErrorsSlice';
-import { RootState } from '@/src/state/store';
+import { AppDispatch, RootState } from '@/src/state/store';
 import { signOutUser } from '@/src/utils/apiFunctions/authAPI';
 import { useRouter } from 'next/navigation';
 import { LuLogOut } from 'react-icons/lu';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Header = () => {
   const username = useSelector((state:RootState) => state.auth.username);
+  const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
   const logoutHandler = async() => {
@@ -15,7 +16,7 @@ const Header = () => {
     if(res?.type !== "error"){
         router.replace("/auth/signin");
     }else{
-        setGlobalError(res?.errors);
+        dispatch(setGlobalError(res?.errors?.[0] ?? "Failed to sign out."));
     }
 
   }

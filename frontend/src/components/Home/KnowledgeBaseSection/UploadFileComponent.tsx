@@ -8,13 +8,13 @@ import { FaFileUpload } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import FilesFailedDialogBox from "./FilesFailedDialogBox";
 import { setGlobalError } from "@/src/state/slices/globalErrorsSlice";
-import { RootState } from "@/src/state/store";
+import { AppDispatch, RootState } from "@/src/state/store";
 import { updateFilesUploading } from "@/src/state/slices/generalContext";
 
 const UploadFileComponent = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragActive, setIsDragActive] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const filesUploading = useSelector(
     (s: RootState) => s.generalContext.filesUploading
   );
