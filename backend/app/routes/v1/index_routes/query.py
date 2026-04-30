@@ -24,14 +24,21 @@ async def query(query: Query, req: Request = Depends(get_user_data)):
 
         async def event_stream():
             if augmented_query:
+                print("REACHED HERE 2")
                 async for token in generate_answer_stream(augmented_query, 0.4, 0.4, 1000, req):
                     if await req.is_disconnected():
                         break
                     yield f"data: {token}\n\n"
             else:
-                for _ in range(1):
-                    yield "data: I’m sorry, but I don’t have any information to answer that query. Please make sure you have added documents to the knowledge base.\n\n"
-
+                fallback_response = (
+                    "I'm sorry, but I don't have any information to answer that query. "
+                    "Please make sure you have added documents to the knowledge base."
+                )
+                for token in fallback_response.split(" "):
+                    if await req.is_disconnected():
+                        break
+                    yield f"data: {token} \n\n"
+                    await asyncio.sleep(0.01)
             yield "data: [DONE]\n\n"
 
         return StreamingResponse(

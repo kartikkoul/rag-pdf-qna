@@ -11,6 +11,10 @@ class PineconeVectorPayload(TypedDict):
     sparse_values: list
     metadata: Chunk
     
+def namespace_exists(index, namespace_name):
+    # Fetch all namespaces that currently contain records
+    stats = index.describe_index_stats()
+    return namespace_name in stats['namespaces']
 
 def store_embeds(index_name: str, chunks: list[Chunk], dense_embeds: ndarray, sparse_embeds: list, user_id:str,  batch_size: int = 100):
     index = get_pc_index(index_name)
@@ -41,11 +45,11 @@ def store_embeds(index_name: str, chunks: list[Chunk], dense_embeds: ndarray, sp
         # This prevents stale chunks when the new upload has fewer chunks than before.
         if len(chunks) > 0:
             source_filename = chunks[0].get("source")
-            if source_filename:
-                index.delete(
-                    filter={"source": {"$eq": source_filename}},
-                    namespace=user_id
-                )
+            if source_filename and namespace_exists(index, user_id):
+                    index.delete(
+                        filter={"source": {"$eq": source_filename}},
+                        namespace=user_id
+                    )
 
         for i in range(0, len(vectors), batch_size):
             index.upsert(vectors=vectors[i: i+batch_size], namespace=user_id)
