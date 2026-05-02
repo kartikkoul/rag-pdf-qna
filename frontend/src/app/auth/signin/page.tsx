@@ -1,6 +1,7 @@
 "use client"
 
 import FormCard from "@/src/ui/FormCard"
+import GoogleContinueButton from "@/src/ui/GoogleContinueButton"
 import Input from "@/src/ui/Input"
 import Label from "@/src/ui/Label"
 import AnimatedPrimaryButton from "@/src/ui/PrimaryButton";
@@ -8,7 +9,7 @@ import { signInUser } from "@/src/utils/apiFunctions/authAPI";
 import { setAuthTokenCookie } from "@/src/utils/authCookie";
 import Link from "next/link";
 import { useRouter, useSearchParams} from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { FaArrowRight } from "react-icons/fa6";
 
 export default function SignIn() {
@@ -19,15 +20,10 @@ export default function SignIn() {
     const params = useSearchParams();
     const router = useRouter();
 
-    const redirectError = params.get("error");
     const redirectPath = params.get("redirect");
     const safeRedirectPath = redirectPath?.startsWith("/") ? redirectPath : null;
-  
-    useEffect(() => {
-        if(redirectError === "auth_error"){
-            setErrors(["You need to sign in"]);
-        }
-    }, [])
+    const redirectAuthMessage =
+        params.get("error") === "auth_error" ? "You need to sign in" : null;
 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -97,17 +93,25 @@ export default function SignIn() {
                         </div>
                     ))}
 
-                    {errors?.length > 0 && (
+                    {(errors?.length > 0 || redirectAuthMessage) && (
                         <div className="rounded-md border border-red-500/30 bg-red-500/10 py-2 px-3 text-red-300 text-sm">
                             <div className="flex gap-1 justify-center md:justify-start">
                                     <p>
-                                        {errors[0]}
+                                        {errors[0] ?? redirectAuthMessage}
                                     </p>
                                 </div>
                         </div>
                     )}
 
                     <AnimatedPrimaryButton type="submit" text="SIGN IN" icon={<FaArrowRight />} loading={isLoading} disabled={isLoading} className="rounded-sm" />
+
+                    <div className="extrainfo flex justify-center items-center">
+                        <hr className="w-full border-[#ffffff27]" />
+                        <span className="mx-2 text-xs text-neutral-500 font-semibold tracking-wider text-nowrap">OR</span>
+                        <hr className="w-full border-[#ffffff27]" />
+                    </div>
+
+                    <GoogleContinueButton redirectPath={safeRedirectPath} />
                 </form>
                 <div className="extraActions mt-8">
                     <div className="extrainfo flex justify-center items-center">

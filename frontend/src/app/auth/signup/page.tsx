@@ -1,6 +1,7 @@
 "use client";
 
 import FormCard from "@/src/ui/FormCard";
+import GoogleContinueButton from "@/src/ui/GoogleContinueButton";
 import Input from "@/src/ui/Input";
 import Label from "@/src/ui/Label";
 import AnimatedPrimaryButton from "@/src/ui/PrimaryButton";
@@ -77,6 +78,7 @@ export default function SignUp() {
           <h2 className="text-xl md:text-2xl font-semibold tracking-wide">Create Account</h2>
           <p className="text-sm text-neutral-400 mt-1">Start building your personal knowledge base.</p>
         </div>
+
         <form
           onSubmit={handleSubmit}
           className="flex flex-col gap-8 w-full"
@@ -105,6 +107,14 @@ export default function SignUp() {
           )}
 
           <AnimatedPrimaryButton type="submit" text="Create Account" loading={isLoading} disabled={isLoading} className="rounded-sm" />
+
+          <div className="extrainfo flex justify-center items-center">
+            <hr className="w-full border-[#ffffff27]" />
+            <span className="mx-2 text-xs text-neutral-500 font-semibold tracking-wider text-nowrap">OR</span>
+            <hr className="w-full border-[#ffffff27]" />
+          </div>
+
+          <GoogleContinueButton />
         </form>
         <div className="extraActions mt-8">
           <div className="extrainfo flex justify-center items-center">

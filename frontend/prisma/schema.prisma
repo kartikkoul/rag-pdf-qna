@@ -18,6 +18,7 @@ model User{
   username String @unique
   email String @unique
   password String
+  googleSub String? @unique
 
   @@id([id, username])
 }
