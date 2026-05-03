@@ -7,7 +7,7 @@ const KnowledgeList = () => {
   const knowledgeList = useSelector((state : RootState) => state.knowledge.knowledge);
 
   if(!knowledgeList || knowledgeList.length === 0){
-    return <div className="noKnowledge flex flex-col flex-1 min-h-0 mt-25 gap-5 items-center h-full text-gray-400 w-5/10 md:w-8/10">
+    return <div className="noKnowledge flex flex-col flex-1 min-h-0 mt-25 gap-5 items-center h-full text-gray-400 w-5/10 md:w-8/10"> 
       <FiDatabase size={60}/>
       <p className="text-xs text-center">No files uploaded yet. Please click on upload file to start feeding knowledge to your bot.</p> 
     </div>
