@@ -1,8 +1,11 @@
 "use client";
 import { prependKnowledge } from "@/src/state/slices/knowledgeSlice";
-import { FastApiUploadResponse } from "@/src/types/backendResponseTypes";
+import {
+  FastApiUploadResponse,
+  FastApiUploadResults,
+} from "@/src/types/backendResponseTypes";
 import { ProcessingCard } from "@/src/ui/ProcessingCard";
-import { uploadFiles } from "@/src/utils/apiFunctions/uploadsAPI";
+import { uploadFile } from "@/src/utils/apiFunctions/uploadsAPI";
 import { ChangeEvent, useRef, useState } from "react";
 import { FaFileUpload } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,29 +30,58 @@ const UploadFileComponent = () => {
     }
     dispatch(updateFilesUploading(true));
 
+    const aggregatedResults: FastApiUploadResults = [];
+    let successCount = 0;
+    let failedCount = 0;
+    let unexpectedError = false;
+
     try {
-      const data = await uploadFiles(incomingFiles);
-      if ("error" in data) {
-        dispatch(setGlobalError(data.error.errors[0] ?? "File upload failed."));
-        return;
-      }
+      for (const file of incomingFiles) {
+        const data = await uploadFile(file);
 
-      const { summary, results } = data.data;
-      if (summary.failed > 0) {
-        setFilesUploadResponse(data);
-      }
+        if ("error" in data) {
+          aggregatedResults.push({
+            filename: file.name,
+            status: "failed",
+            error: data.error.errors[0] ?? "File upload failed.",
+          });
+          failedCount++;
+          continue;
+        }
 
-      const successfulFileNames = results
-        .filter((file) => file.status === "success")
-        .map((file) => file.filename);
-
-      if (successfulFileNames.length > 0) {
-        dispatch(prependKnowledge(successfulFileNames));
+        for (const result of data.data.results) {
+          aggregatedResults.push(result);
+          if (result.status === "success") {
+            successCount++;
+            dispatch(prependKnowledge([result.filename]));
+          } else {
+            failedCount++;
+          }
+        }
       }
     } catch {
-      dispatch(setGlobalError("Unexpected upload error. Please try again."));
+      unexpectedError = true;
     } finally {
       dispatch(updateFilesUploading(false));
+    }
+
+    if (unexpectedError) {
+      dispatch(setGlobalError("Unexpected upload error. Please try again."));
+      return;
+    }
+
+    if (failedCount > 0) {
+      setFilesUploadResponse({
+        message: "Documents processed",
+        data: {
+          summary: {
+            total: aggregatedResults.length,
+            success: successCount,
+            failed: failedCount,
+          },
+          results: aggregatedResults,
+        },
+      });
     }
   };
 

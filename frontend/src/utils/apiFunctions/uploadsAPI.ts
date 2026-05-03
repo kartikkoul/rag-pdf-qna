@@ -3,13 +3,10 @@ import { StandardError } from "@/src/types/types";
 import BASE_API_ROUTER from "./axiosRouter";
 import generateErrors from "./generateErrors";
 
-export const uploadFiles = async (files: File[]) => {
+export const uploadFile = async (file: File) => {
   try {
     const formData = new FormData();
-
-    files.forEach((file) => {
-      formData.append("files", file);
-    });
+    formData.append("files", file);
 
     const response = await BASE_API_ROUTER.post("/upload", formData ,{
         headers:{
