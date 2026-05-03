@@ -92,7 +92,6 @@ export default function SignIn() {
                             }} />
                         </div>
                     ))}
-
                     {(errors?.length > 0 || redirectAuthMessage) && (
                         <div className="rounded-md border border-red-500/30 bg-red-500/10 py-2 px-3 text-red-300 text-sm">
                             <div className="flex gap-1 justify-center md:justify-start">

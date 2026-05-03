@@ -39,8 +39,8 @@ const HomePage = ({ authData }: { authData: AuthData }) => {
       const knowledge = [];
       const data = await fetchDocsNames();
       dispatch(clearGlobalError());
-      if (data.error) {
-        const error = data.error;
+      if (data.error || !data) {
+        const error = data.error ?? {errors:["Something went wrong. Couldn't fetch names of docs."]};
         if(typeof window !== "undefined"){
           dispatch(setGlobalError(error.errors[0]));
         }
@@ -88,7 +88,7 @@ const HomePage = ({ authData }: { authData: AuthData }) => {
         <div className="pointer-events-none absolute inset-0 top-16 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(168,85,247,0.12),transparent),radial-gradient(ellipse_60%_40%_at_100%_50%,rgba(168,85,247,0.06),transparent)]" aria-hidden />
         <div className="relative hidden md:flex w-full h-full min-h-0 gap-0 overflow-hidden md:border-t md:border-white/5">
           <KnowledgeBase/>
-          <div className="hidden md:block w-px shrink-0 bg-gradient-to-b from-transparent via-white/10 to-transparent self-stretch" aria-hidden />
+          <div className="hidden md:block w-px shrink-0 bg-linear-to-b from-transparent via-white/10 to-transparent self-stretch" aria-hidden />
           <AIChat />
         </div>
 

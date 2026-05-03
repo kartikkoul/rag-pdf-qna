@@ -1,7 +1,7 @@
 import { Message } from '@/src/types/types';
 import { BsCpuFill } from 'react-icons/bs'
 import { RiUserFill } from 'react-icons/ri'
-import ReactMarkdown from "react-markdown";
+import AssistantMarkdown from '@/src/components/Home/AIChatSection/AssistantMarkdown';
 
 const MessageItem = ({ message, className }: {
   message: Message,
@@ -43,13 +43,18 @@ const MessageItem = ({ message, className }: {
           
         `}>
         {message.role === "assistant" && <div className="bg-purple-300 w-2 h-full top-0 left-0 absolute"></div>}
-        <ReactMarkdown>
+        {message.role === "assistant" ? (
+          <AssistantMarkdown className="min-w-0 max-w-full break-words [&_*]:max-w-full">
             {message.content}
-        </ReactMarkdown>
+          </AssistantMarkdown>
+        ) : (
+          <div className="min-w-0 max-w-full whitespace-pre-wrap break-words">
+            {message.content}
+          </div>
+        )}
         {message.error && (<><span className="error text-red-400 border px-2 text-[12px] rounded-sm rounded-tl-none">{message.error as string}</span></>)}
       </div>
     </li>
   )
 }
-
 export default MessageItem

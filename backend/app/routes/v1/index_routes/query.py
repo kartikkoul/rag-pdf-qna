@@ -1,4 +1,5 @@
 import asyncio
+import json
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import StreamingResponse
 
@@ -8,6 +9,11 @@ from app.services.generation.generate_answer import generate_answer_stream
 from app.services.retrieval.augment_query import augment_query
 
 query_router = APIRouter()
+
+
+def _sse_chunk(token: str) -> str:
+    # JSON-encode the payload so newlines/quotes/etc. survive the SSE framing.
+    return f"data: {json.dumps(token, ensure_ascii=False)}\n\n"
 
 @query_router.post("/query")
 async def query(query: Query, req: Request = Depends(get_user_data)):
@@ -24,20 +30,19 @@ async def query(query: Query, req: Request = Depends(get_user_data)):
 
         async def event_stream():
             if augmented_query:
-                print("REACHED HERE 2")
                 async for token in generate_answer_stream(augmented_query, 0.4, 0.4, 1000, req):
                     if await req.is_disconnected():
                         break
-                    yield f"data: {token}\n\n"
+                    yield _sse_chunk(token)
             else:
                 fallback_response = (
                     "I'm sorry, but I don't have any information to answer that query. "
                     "Please make sure you have added documents to the knowledge base."
                 )
-                for token in fallback_response.split(" "):
+                for word in fallback_response.split(" "):
                     if await req.is_disconnected():
                         break
-                    yield f"data: {token} \n\n"
+                    yield _sse_chunk(word + " ")
                     await asyncio.sleep(0.01)
             yield "data: [DONE]\n\n"
 

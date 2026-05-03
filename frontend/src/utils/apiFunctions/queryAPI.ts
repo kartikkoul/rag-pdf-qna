@@ -76,15 +76,28 @@ export const streamLLMResponse = async (
           const lines = part.split(/\r?\n/u);
           const dataLines = lines
             .filter((l) => l.startsWith("data:"))
-            .map((l) => l.slice(5)); // keep rest of line as-is
+            .map((l) => {
+              const rest = l.slice(5);
+              return rest.startsWith(" ") ? rest.slice(1) : rest;
+            });
 
           if (dataLines.length === 0) continue;
 
-          const token = dataLines.join("\n").replace(/^ /, "");
+          const raw = dataLines.join("\n");
 
-          if (token === "[DONE]") return;
-          if (token === "[PING]") continue;
-          if (!token || token.trim().length === 0) continue;
+          if (raw === "[DONE]") return;
+          if (raw === "[PING]") continue;
+          if (!raw) continue;
+
+          let token: string;
+          try {
+            const parsed = JSON.parse(raw);
+            token = typeof parsed === "string" ? parsed : String(parsed);
+          } catch {
+            token = raw;
+          }
+
+          if (!token) continue;
 
           onToken(token);
         }

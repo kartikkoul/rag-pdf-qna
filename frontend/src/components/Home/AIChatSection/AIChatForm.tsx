@@ -2,7 +2,7 @@
 import { addMessage } from "@/src/state/slices/conversationSlice";
 import { Message, StreamingMessage } from "@/src/types/types";
 import { streamLLMResponse } from "@/src/utils/apiFunctions/queryAPI";
-import { Dispatch, SetStateAction, useRef, SubmitEvent, useState, useEffect } from "react";
+import { Dispatch, SetStateAction, useRef, SubmitEvent, useState } from "react";
 import { BiStop } from "react-icons/bi";
 import { FaPaperPlane } from "react-icons/fa";
 import { useDispatch } from "react-redux";
@@ -18,7 +18,7 @@ const AIChatForm = ({
   setStreamingMessage: Dispatch<SetStateAction<StreamingMessage | null>>;
 }) => {
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
-  const streamedMessageRef = useRef<string>(null);
+  const streamedMessageRef = useRef<string>("");
   const abortController = useRef<AbortController | null>(null);
   const [streaming, setStreaming] = useState<boolean>(false);
   const dispatch = useDispatch();
@@ -46,17 +46,13 @@ const AIChatForm = ({
       const result = await streamLLMResponse(
         userMessage.content,
         (token) => {
-          setStreamingMessage((s) => {
-            const prev = s ?? initialStreaming;
-            const updatedMessage = prev.message + token;
-            streamedMessageRef.current = updatedMessage;
-
-            return {
-              ...prev,
-              message: updatedMessage,
-              streaming: true,
-            };
-          });
+          // IMPORTANT: update the ref synchronously *before* calling setState.
+          // React batches state updaters and runs them lazily, so writing the
+          // ref inside the updater means the final commit (after [DONE]) can
+          // read a stale value and the saved message gets truncated.
+          streamedMessageRef.current = streamedMessageRef.current + token;
+          const next = streamedMessageRef.current;
+          setStreamingMessage({ message: next, streaming: true });
         },
         abortController.current,
       );

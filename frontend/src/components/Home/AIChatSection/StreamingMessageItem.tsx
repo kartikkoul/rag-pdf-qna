@@ -1,6 +1,6 @@
 import { StreamingMessage } from '@/src/types/types'
 import { BsCpuFill } from 'react-icons/bs'
-import ReactMarkdown from "react-markdown"
+import AssistantMarkdown from '@/src/components/Home/AIChatSection/AssistantMarkdown'
 
 const StreamingMessageItem = ({ message }: { message: StreamingMessage }) => {
 
@@ -39,9 +39,9 @@ const StreamingMessageItem = ({ message }: { message: StreamingMessage }) => {
 
         `}>
           <div className="bg-purple-300 w-2 h-full top-0 left-0 absolute"></div>
-          <ReactMarkdown>
+          <AssistantMarkdown className="min-w-0 max-w-full break-words [&_*]:max-w-full">
             {message.message ?? ''}
-          </ReactMarkdown>
+          </AssistantMarkdown>
         </div></>)}
     </li>
   )
