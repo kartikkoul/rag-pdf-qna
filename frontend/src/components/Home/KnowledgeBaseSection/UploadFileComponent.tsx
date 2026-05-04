@@ -26,7 +26,7 @@ const UploadFileComponent = () => {
     return () => {
       dispatch(updateFilesUploading(false));
     }
-  });
+  }, []);
 
   const [filesUploadResponse, setFilesUploadResponse] =
     useState<FastApiUploadResponse | null>(null);
