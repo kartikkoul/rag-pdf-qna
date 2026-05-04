@@ -6,7 +6,7 @@ import {
 } from "@/src/types/backendResponseTypes";
 import { ProcessingCard } from "@/src/ui/ProcessingCard";
 import { uploadFile } from "@/src/utils/apiFunctions/uploadsAPI";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { FaFileUpload } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import FilesFailedDialogBox from "./FilesFailedDialogBox";
@@ -21,6 +21,13 @@ const UploadFileComponent = () => {
   const filesUploading = useSelector(
     (s: RootState) => s.generalContext.filesUploading
   );
+
+  useEffect(()=>{
+    return () => {
+      dispatch(updateFilesUploading(false));
+    }
+  });
+
   const [filesUploadResponse, setFilesUploadResponse] =
     useState<FastApiUploadResponse | null>(null);
 
