@@ -31,7 +31,6 @@ The diagram below illustrates the complete RAG pipeline — from document ingest
 
 ![RAG Pipeline Architecture](./docs/architecture.svg)
 
-*Replace `docs/architecture.png` with your own diagram if you'd like to update it.*
 
 </div>
 
