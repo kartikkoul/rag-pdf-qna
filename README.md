@@ -29,7 +29,7 @@ The diagram below illustrates the complete RAG pipeline — from document ingest
 
 <div align="center">
 
-![RAG Pipeline Architecture](./docs/architecture.png)
+![RAG Pipeline Architecture](./docs/architecture.svg)
 
 *Replace `docs/architecture.png` with your own diagram if you'd like to update it.*
 
@@ -238,17 +238,6 @@ The stream emits `data: "<token>"` frames followed by a final `data: [DONE]`.
 | **Frontend** | Vercel | Auto-deployed from the `frontend/` directory. |
 | **Postgres** | Any managed Postgres (Neon, Supabase, RDS…) | Used only for users/auth. |
 | **Pinecone** | Pinecone Cloud | Single index, namespaced per user. |
-
----
-
-## Roadmap
-
-- [ ] Source citations with page-level highlighting in the UI
-- [ ] Conversation memory (multi-turn context)
-- [ ] Support for non-PDF formats (DOCX, MD, HTML)
-- [ ] Per-document deletion & re-indexing
-- [ ] Usage analytics dashboard
-- [ ] Optional local LLM via Ollama
 
 ---
 
