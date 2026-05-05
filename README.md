@@ -17,7 +17,7 @@
 
 ## Overview
 
-**My Knowledgebase** is a full-stack Retrieval-Augmented Generation (RAG) application that lets users upload PDF documents to build a private, personal knowledge base, then ask questions that are answered **strictly from the uploaded content** — with token-by-token streaming, hybrid retrieval, and per-user data isolation.
+**My Knowledgebase** is a full-stack Retrieval-Augmented Generation (RAG) application that lets users upload PDF documents to build a private, personal knowledge base, then ask questions that are answered **strictly from the uploaded content** with token-by-token streaming, hybrid retrieval, and per-user data isolation.
 
 > *"If the answer isn't in your documents, the bot will say so."*
 
@@ -249,25 +249,6 @@ The stream emits `data: "<token>"` frames followed by a final `data: [DONE]`.
 - [ ] Per-document deletion & re-indexing
 - [ ] Usage analytics dashboard
 - [ ] Optional local LLM via Ollama
-
----
-
-## Contributing
-
-Issues and pull requests are welcome. For larger changes, please open an issue first to discuss what you'd like to change.
-
-```bash
-git checkout -b feat/your-feature
-# ...make changes...
-git commit -m "feat: short description"
-git push origin feat/your-feature
-```
-
----
-
-## License
-
-Released under the [MIT License](LICENSE).
 
 ---
 
